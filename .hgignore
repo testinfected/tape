@@ -1,0 +1,6 @@
+syntax: glob
+
+*.iws
+*.ipr
+*.iml
+.DS_Store
