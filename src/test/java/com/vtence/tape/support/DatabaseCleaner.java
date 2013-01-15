@@ -12,7 +12,6 @@ public class DatabaseCleaner {
     private static final String[] TABLES = {
             "line_items",
             "orders",
-//            "order_numbers",
             "payments",
             "items",
             "products",

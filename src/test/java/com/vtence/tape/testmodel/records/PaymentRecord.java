@@ -24,7 +24,7 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
 
     public static final String CREDIT_CARD = "credit_card";
 
-    public static Table<PaymentMethod> buildTable() {
+    public static Table<PaymentMethod> payments() {
         return new PaymentRecord().payments;
     }
 

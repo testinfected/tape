@@ -23,7 +23,7 @@ public class OrderRecord extends AbstractRecord<Order> {
     private final Column<String> number = orders.STRING("number");
     private final Column<Long> payment = orders.LONG("payment_id");
 
-    public static Table<Order> buildTable(Table<? extends PaymentMethod> payments) {
+    public static Table<Order> ordersWith(Table<? extends PaymentMethod> payments) {
         return new OrderRecord(payments).orders;
     }
 

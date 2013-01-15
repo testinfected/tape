@@ -4,3 +4,5 @@ syntax: glob
 *.ipr
 *.iml
 .DS_Store
+target
+reports

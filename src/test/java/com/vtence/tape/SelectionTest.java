@@ -57,11 +57,11 @@ public class SelectionTest {
     Connection connection = database.connect();
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
-    Table<Product> products = ProductRecord.buildTable();
-    Table<Item> items = ItemRecord.buildTable(products);
-    Table<PaymentMethod> payments = PaymentRecord.buildTable();
-    Table<Order> orders = OrderRecord.buildTable(payments);
-    Table<LineItem> lineItems = LineItemRecord.buildTable();
+    Table<Product> products = ProductRecord.products();
+    Table<Item> items = ItemRecord.itemsOf(products);
+    Table<PaymentMethod> payments = PaymentRecord.payments();
+    Table<Order> orders = OrderRecord.ordersWith(payments);
+    Table<LineItem> lineItems = LineItemRecord.lineItems();
 
     @Before public void
     resetDatabase() throws Exception {

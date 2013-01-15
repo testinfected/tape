@@ -22,7 +22,7 @@ public class ItemRecord extends AbstractRecord<Item> {
     private final Column<Long> product = items.LONG("product_id");
     private final Column<BigDecimal> price = items.BIG_DECIMAL("price");
 
-    public static Table<Item> buildTable(Table<Product> products) {
+    public static Table<Item> itemsOf(Table<Product> products) {
         return new ItemRecord(products).items;
     }
 

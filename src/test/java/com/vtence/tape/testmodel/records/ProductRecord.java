@@ -19,7 +19,7 @@ public class ProductRecord extends AbstractRecord<Product> {
     private final Column<String> name = products.STRING("name");
     private final Column<String> description = products.STRING("description");
 
-    public static Table<Product> buildTable() {
+    public static Table<Product> products() {
         return new ProductRecord().products;
     }
 

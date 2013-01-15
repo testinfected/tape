@@ -22,7 +22,7 @@ public class LineItemRecord extends AbstractRecord<LineItem> {
     private final Column<Long> order = lineItems.LONG("order_id");
     private final Column<Integer> line = lineItems.INT("order_line");
 
-    public static Table<LineItem> buildTable() {
+    public static Table<LineItem> lineItems() {
         return new LineItemRecord().lineItems;
     }
 

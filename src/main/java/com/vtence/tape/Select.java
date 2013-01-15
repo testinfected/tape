@@ -62,7 +62,7 @@ public class Select<T> {
     public T single(Connection connection) {
         List<T> entities = list(connection);
         if (entities.isEmpty()) throw new JDBCException("Result set is empty");
-        if (entities.size() > 1) throw new JDBCException("Result set contains " + entities.size() + " rows");
+        if (entities.size() > 1) throw new JDBCException("Result set contains " + entities.size() + " rows (expecting 1)");
         return firstOf(entities);
     }
 
