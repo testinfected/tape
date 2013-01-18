@@ -31,7 +31,40 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>Under construction...</p>
+        <h2>What is Tape?</h2>
+
+<p>Tape is a lightweight library for doing CRUD operations over JDBC with a fluent API.</p>
+
+<p>I wrote tape because I wanted to do write persistence code using plain old JDBC instead of having to use an heavyweight ORM framework.</p>
+
+<p>Tape is designed to be:</p>
+
+<ul>
+<li>Lightweight without any dependency</li>
+<li>Small and easy to understand in a short amount of time</li>
+<li>Transparent without magic happening behind the the scenes</li>
+<li>Fast to setup and fire so your database integration tests run fast</li>
+<li>Easy to get started with</li>
+</ul><p>Tape is not:</p>
+
+<ul>
+<li>An Object Relational Mapping (ORM) framework. There are already good ORM frameworks available</li>
+<li>An abstraction over SQL. The intention is to retain the simplicity and power of SQL as a language</li>
+<li>An object-oriented language over SQL</li>
+<li>A code generation framework. It does not try to generate Java representations of your database schema. You have to do that yourself. </li>
+</ul><p>The intention is simply to make it easier to work with JDBC for typical CRUD scenarios.</p>
+
+<h2>What does it look like?</h2>
+
+<p>Following is a simple example of how Tape may be used:</p>
+
+<pre><code>List&lt;Item&gt; items = Select.from(items).
+                        join(products, "items.product_id = products.id").
+                        where("products.name = ?", "Bulldog").
+                        list(connection);
+</code></pre>
+
+<p>For more examples, the best is to have a look at the <a href="https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape/SelectionTest.java">tests</a>.</p>
       </section>
     </div>
 
