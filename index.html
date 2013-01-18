@@ -58,10 +58,10 @@
 
 <p>Following is a simple example of how Tape may be used:</p>
 
-<pre><code>List&lt;Item&gt; items = Select.from(items).
-                        join(products, "items.product_id = products.id").
-                        where("products.name = ?", "Bulldog").
-                        list(connection);
+<pre><code>List&lt;Item&gt; bulldogs = Select.from(items).
+                          join(products, "items.product_id = products.id").
+                          where("products.name = ?", "Bulldog").
+                          list(connection);
 </code></pre>
 
 <p>For more examples, the best is to have a look at the <a href="https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape/SelectionTest.java">tests</a>.</p>
