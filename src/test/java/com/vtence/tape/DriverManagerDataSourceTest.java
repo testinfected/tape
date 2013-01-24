@@ -25,8 +25,8 @@ public class DriverManagerDataSourceTest {
     }
 
     @After public void
-    closeConnection() throws SQLException {
-        connection.close();
+    closeConnection() {
+        JDBC.close(connection);
     }
 
     @Test public void

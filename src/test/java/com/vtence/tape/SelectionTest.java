@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -69,8 +68,8 @@ public class SelectionTest {
     }
 
     @After public void
-    closeConnection() throws SQLException {
-        connection.close();
+    closeConnection() {
+        JDBC.close(connection);
     }
 
     @Test public void

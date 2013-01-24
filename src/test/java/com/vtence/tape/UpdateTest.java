@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import static com.vtence.tape.testmodel.Access.idOf;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
@@ -33,8 +32,8 @@ public class UpdateTest {
     }
 
     @After public void
-    closeConnection() throws SQLException {
-        connection.close();
+    closeConnection() {
+        JDBC.close(connection);
     }
 
     @Test public void
