@@ -35,13 +35,4 @@ public class ProductRecord extends AbstractRecord<Product> {
         name.set(st, product.getName());
         description.set(st, product.getDescription());
     }
-
-    public void handleKeys(ResultSet keys, Product product) throws SQLException {
-        idOf(product).set(generatedId(keys));
-    }
-
-    private long generatedId(ResultSet rs) throws SQLException {
-        rs.first();
-        return rs.getLong(1);
-    }
 }
