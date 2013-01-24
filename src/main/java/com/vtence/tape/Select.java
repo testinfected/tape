@@ -48,9 +48,9 @@ public class Select<T> {
         return this;
     }
 
-    public Select<T> where(String clause, Object... values) {
+    public Select<T> where(String clause, Object... parameters) {
         statement.where(clause);
-        addParameters(values);
+        addParameters(parameters);
         return this;
     }
 
@@ -81,10 +81,9 @@ public class Select<T> {
         try {
             query = connection.prepareStatement(statement.toSql());
             for (int index = 0; index < parameters.size(); index++) {
-                setParameter(query, index);
+                JDBC.setParameter(query, index + 1, parameters.get(index));
             }
-            ResultSet resultSet = query.executeQuery();
-
+            ResultSet resultSet = execute(query);
             while (resultSet.next()) {
                 entities.add(from.hydrate(resultSet));
             }
@@ -96,9 +95,8 @@ public class Select<T> {
         return entities;
     }
 
-    private void setParameter(PreparedStatement query, int index) throws SQLException {
-        int sqlType = query.getParameterMetaData().getParameterType(index + 1);
-        query.setObject(index + 1, parameters.get(index), sqlType);
+    private ResultSet execute(PreparedStatement query) throws SQLException {
+        return query.executeQuery();
     }
 
     private void addParameters(Object... values) {

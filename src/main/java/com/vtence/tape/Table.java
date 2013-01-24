@@ -43,6 +43,10 @@ public class Table<T> {
         return column;
     }
 
+    public int columnCount() {
+        return columns.size();
+    }
+
     public List<String> columnNames() {
         List<String> names = new ArrayList<String>();
         for (Column<?> column : columns) {

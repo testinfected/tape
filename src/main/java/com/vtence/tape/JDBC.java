@@ -1,9 +1,8 @@
 package com.vtence.tape;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Iterator;
-import java.util.List;
 
 public class JDBC {
 
@@ -15,13 +14,9 @@ public class JDBC {
         }
     }
 
-    public static String asString(Iterable<?> elements) {
-        StringBuilder builder = new StringBuilder();
-        for (Iterator<?> it = elements.iterator(); it.hasNext(); ) {
-            builder.append(it.next());
-            if (it.hasNext()) builder.append(", ");
-        }
-        return builder.toString();
+    public static void setParameter(PreparedStatement st, int index, Object value) throws SQLException {
+        int sqlType = st.getParameterMetaData().getParameterType(index);
+        st.setObject(index, value, sqlType);
     }
 
     private JDBC() {}

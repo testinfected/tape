@@ -3,6 +3,7 @@ package com.vtence.tape;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import static java.util.Arrays.asList;
 
 public class SelectStatement implements SqlStatement {
 
-    private final String fromTable;
+    private final String table;
     private final Map<String, List<String>> columns = new HashMap<String, List<String>>();
     private final Map<String, String> aliases = new HashMap<String, String>();
     private final List<String> joinTables = new ArrayList<String>();
@@ -18,14 +19,14 @@ public class SelectStatement implements SqlStatement {
     private final StringBuilder whereClause = new StringBuilder();
     private final StringBuilder orderByClause = new StringBuilder();
 
-    public SelectStatement(String fromTable, String... columns) {
-        this.fromTable = fromTable;
-        this.columns.put(fromTable, asList(columns));
+    public SelectStatement(String table, String... columns) {
+        this.table = table;
+        this.columns.put(table, asList(columns));
     }
 
-    public SelectStatement(String fromTable, List<String> columns) {
-        this.fromTable = fromTable;
-        this.columns.put(fromTable, columns);
+    public SelectStatement(String table, List<String> columns) {
+        this.table = table;
+        this.columns.put(table, columns);
     }
 
     public void aliasTableName(String tableName, String alias) {
@@ -73,12 +74,18 @@ public class SelectStatement implements SqlStatement {
     }
 
     private String selectClause() {
-        return "select " + JDBC.asString(listColumns());
+        StringBuilder clause = new StringBuilder();
+        clause.append("select ");
+        for (Iterator<String> it = listColumns().iterator(); it.hasNext(); ) {
+            clause.append(it.next());
+            if (it.hasNext()) clause.append(", ");
+        }
+        return clause.toString();
     }
 
     private Collection<String> listColumns() {
         Collection<String> columnNames = new ArrayList<String>();
-        columnNames.addAll(qualifiedColumnNamesOf(fromTable));
+        columnNames.addAll(qualifiedColumnNamesOf(table));
         for (String joinTable : joinTables) {
             columnNames.addAll(qualifiedColumnNamesOf(joinTable));
         }
@@ -107,9 +114,9 @@ public class SelectStatement implements SqlStatement {
 
     private String fromClause() {
         StringBuilder from = new StringBuilder(" from ");
-        from.append(fromTable);
-        if (aliased(fromTable)) {
-            from.append(" ").append(aliasOf(fromTable));
+        from.append(table);
+        if (aliased(table)) {
+            from.append(" ").append(aliasOf(table));
         }
         return from.toString();
     }

@@ -3,8 +3,6 @@ package com.vtence.tape;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -28,7 +26,7 @@ public class Insert<T> {
         try {
             insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS);
             into.dehydrate(insert, entity);
-            executeInsert(insert);
+            execute(insert);
             into.handleKeys(insert.getGeneratedKeys(), entity);
         } catch (SQLException e) {
             throw new JDBCException("Could not insert entity " + entity, e);
@@ -37,7 +35,7 @@ public class Insert<T> {
         }
     }
 
-    private void executeInsert(PreparedStatement insert) throws SQLException {
+    private void execute(PreparedStatement insert) throws SQLException {
         int rowsInserted = insert.executeUpdate();
         if (rowsInserted != 1) {
             throw new SQLException(rowsInserted + " rows inserted (expected 1)");

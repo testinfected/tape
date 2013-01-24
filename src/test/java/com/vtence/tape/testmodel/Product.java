@@ -3,8 +3,8 @@ package com.vtence.tape.testmodel;
 public class Product extends Entity {
 
     private final String number;
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
 
     public Product(String number, String name, String description) {
         this.number = number;
@@ -20,8 +20,16 @@ public class Product extends Entity {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
