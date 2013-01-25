@@ -1,14 +1,20 @@
 ## What is Tape?
 
-Tape is a lightweight library for doing CRUD operations over JDBC with a fluent API.
+Tape is a lightweight data mapping library.
 
-I wrote tape because I wanted to do write persistence code using plain old JDBC instead of having to use an heavyweight ORM framework.
+It was specifically designed as a fluent API over JDBC for simple CRUD operations.
+
+## Why Tape?
+
+So that I could write persistence code using plain old JDBC instead of having to use an heavyweight ORM framework.
+
+## How does it work?
 
 Tape is designed to be:
-* Lightweight without any dependency
-* Small and easy to understand in a short amount of time
-* Transparent without magic happening behind the the scenes
-* Fast to setup and fire so your database integration tests run fast
+* Lightweight - without any dependency
+* Small - easy to understand in a short amount of time
+* Transparent - without magic happening behind the the scenes
+* Fast to setup and fire - so your database integration tests run fast
 * Easy to get started with
 
 Tape is not:
@@ -21,13 +27,20 @@ The intention is simply to make it easier to work with JDBC for typical CRUD sce
 
 ## What does it look like?
 
-Following is a simple example of how Tape may be used:
+Following is a simple illustration of how Tape may be used.
 
 ```java
+// Describe the mapping for Items and Products
+Table<Product> products = ...
+Table<Item> items = ...
+
+// Select all items whose product name is 'Bulldog' using the given connection
 List<Item> bulldogs = Select.from(items).
                           join(products, "items.product_id = products.id").
                           where("products.name = ?", "Bulldog").
                           list(connection);
 ```
 
-For more examples, the best is to have a look at the [tests](https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape/SelectionTest.java)
+## Learn More
+
+For further details and other examples, take a look at the [tests](https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape).
