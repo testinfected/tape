@@ -21,24 +21,18 @@ public class Insert<T> {
         this.statement = new InsertStatement(table.name(), table.columnNames());
     }
 
-    public void execute(final Connection connection) {
+    public int execute(final Connection connection) {
         PreparedStatement insert = null;
         try {
             insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS);
             into.dehydrate(insert, entity);
-            execute(insert);
+            int rowsInserted = insert.executeUpdate();
             into.handleKeys(insert.getGeneratedKeys(), entity);
+            return rowsInserted;
         } catch (SQLException e) {
             throw new JDBCException("Could not insert entity " + entity, e);
         } finally {
             JDBC.close(insert);
-        }
-    }
-
-    private void execute(PreparedStatement insert) throws SQLException {
-        int rowsInserted = insert.executeUpdate();
-        if (rowsInserted != 1) {
-            throw new SQLException(rowsInserted + " rows inserted (expected 1)");
         }
     }
 }

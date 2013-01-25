@@ -49,7 +49,7 @@ public class DeletionTest {
         transactor.perform(new UnitOfWork() {
             public void execute() throws Exception {
                 int deleted = Delete.from(products).execute(connection);
-                assertThat("deleted records", deleted, is(3));
+                assertThat("records deleted", deleted, is(3));
             }
         });
 
@@ -66,7 +66,7 @@ public class DeletionTest {
         transactor.perform(new UnitOfWork() {
             public void execute() throws Exception {
                 int deleted = Delete.from(products).where("number = ?", "12345678").execute(connection);
-                assertThat("deleted records", deleted, is(1));
+                assertThat("records deleted", deleted, is(1));
             }
         });
 

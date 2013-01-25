@@ -1,6 +1,5 @@
-package com.vtence.tape.testmodel;
+package com.vtence.tape;
 
-import com.vtence.tape.UpdateStatement;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;

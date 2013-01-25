@@ -1,5 +1,3 @@
-require 'buildr/java/cobertura'
-
 define 'tape', :group => 'com.vtence.tape', :version => '0.1-SNAPSHOT' do
   compile.options.source = '1.6'
   compile.options.target = '1.6'

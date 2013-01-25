@@ -30,7 +30,7 @@ public class Update<T> {
         return this;
     }
 
-    public void execute(Connection connection) throws SQLException {
+    public int execute(Connection connection) throws SQLException {
         PreparedStatement update = null;
         try {
             update = connection.prepareStatement(statement.toSql());
@@ -38,15 +38,11 @@ public class Update<T> {
             for (int i = 0; i < parameters.size(); i++) {
                 JDBC.setParameter(update, set.columnCount() + i + 1, parameters.get(i));
             }
-            execute(update);
+            return update.executeUpdate();
         } catch (SQLException e) {
             throw new JDBCException("Could not update entity " + entity, e);
         } finally {
             JDBC.close(update);
         }
-    }
-
-    private void execute(PreparedStatement update) throws SQLException {
-        update.executeUpdate();
     }
 }

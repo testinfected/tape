@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.sql.Connection;
 
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
@@ -39,12 +40,12 @@ public class InsertionTest {
 
     @Test public void
     insertingANewRecord() throws Exception {
-        Product original = aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog").build();
-        final Insert<Product> insert = Insert.into(products, original);
+        final Product original = aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog").build();
 
         transactor.perform(new UnitOfWork() {
             public void execute() throws Exception {
-                insert.execute(connection);
+                int inserted = Insert.into(products, original).execute(connection);
+                assertThat("records inserted", inserted, is(1));
             }
         });
 
@@ -54,17 +55,16 @@ public class InsertionTest {
 
     @Test public void
     insertingAEntityWillSetItsIdentifier() throws Exception {
-        Product product = aProduct().build();
-        assertThat("orginal id", idOf(product), nullValue());
+        final Product entity = aProduct().build();
+        assertThat("orginal id", idOf(entity), nullValue());
 
-        final Insert<Product> insert = Insert.into(products, product);
         transactor.perform(new UnitOfWork() {
             public void execute() throws Exception {
-                insert.execute(connection);
+                Insert.into(products, entity).execute(connection);
             }
         });
 
-        assertThat("updated id", idOf(product), not(nullValue()));
+        assertThat("updated id", idOf(entity), not(nullValue()));
     }
 
     private Long idOf(Object entity) {

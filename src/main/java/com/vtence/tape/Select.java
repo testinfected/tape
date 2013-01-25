@@ -5,9 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Select<T> {
+
+    private final Table<T> from;
+    private final SelectStatement statement;
+    private final List<Object> parameters = new ArrayList<Object>();
 
     public static <T> Select<T> from(final Table<T> table) {
         return new Select<T>(table);
@@ -16,10 +21,6 @@ public class Select<T> {
     public static <T> Select<T> from(final Table<T> table, String alias) {
         return new Select<T>(table, alias);
     }
-
-    private final Table<T> from;
-    private final SelectStatement statement;
-    private final List<Object> parameters = new ArrayList<Object>();
 
     public Select(Table<T> from) {
         this.from = from;
@@ -50,7 +51,7 @@ public class Select<T> {
 
     public Select<T> where(String clause, Object... parameters) {
         statement.where(clause);
-        addParameters(parameters);
+        this.parameters.addAll(Arrays.asList(parameters));
         return this;
     }
 
@@ -97,15 +98,5 @@ public class Select<T> {
 
     private ResultSet execute(PreparedStatement query) throws SQLException {
         return query.executeQuery();
-    }
-
-    private void addParameters(Object... values) {
-        for (Object value : values) {
-            addParameter(value);
-        }
-    }
-
-    private void addParameter(Object value) {
-        parameters.add(value);
     }
 }

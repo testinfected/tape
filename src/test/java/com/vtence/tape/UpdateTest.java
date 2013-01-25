@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.sql.Connection;
 
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
@@ -38,18 +39,19 @@ public class UpdateTest {
     @Test public void
     updatingAnExistingRecord() throws Exception {
         persist(aProduct().named("Dalmatian"));
-        final Product product = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
+        final Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
 
-        product.setName("Labrador Retriever");
-        product.setDescription("A fun type of dog");
+        original.setName("Labrador Retriever");
+        original.setDescription("A fun type of dog");
         transactor.perform(new UnitOfWork() {
             public void execute() throws Exception {
-                Update.set(products, product).where("number = ?", "12345678").execute(connection);
+                int updated = Update.set(products, original).where("number = ?", "12345678").execute(connection);
+                assertThat("records updated", updated, is(1));
             }
         });
 
         Product record = Select.from(products).where("name = ?", "Labrador Retriever").single(connection);
-        assertThat("updated record", record, samePropertyValuesAs(product));
+        assertThat("updated record", record, samePropertyValuesAs(original));
     }
 
     private Product persist(Builder<Product> productBuilder) throws Exception {
