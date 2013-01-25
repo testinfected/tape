@@ -18,6 +18,7 @@ public class SelectStatement implements SqlStatement {
     private final StringBuilder joinClause = new StringBuilder();
     private final StringBuilder whereClause = new StringBuilder();
     private final StringBuilder orderByClause = new StringBuilder();
+    private final StringBuilder limitClause = new StringBuilder();
 
     public SelectStatement(String table, String... columns) {
         this.table = table;
@@ -63,6 +64,16 @@ public class SelectStatement implements SqlStatement {
         orderByClause.append(" order by ").append(clause);
     }
 
+    public void limit(int rowCount) {
+        limit(0, rowCount);
+    }
+
+    public void limit(int offset, int rowCount) {
+        limitClause.append(" limit ");
+        if (offset != 0) limitClause.append(offset).append(", ");
+        limitClause.append(rowCount);
+    }
+
     public String toSql() {
         StringBuilder sql = new StringBuilder();
         sql.append(selectClause());
@@ -70,6 +81,7 @@ public class SelectStatement implements SqlStatement {
         sql.append(joinClause);
         sql.append(whereClause);
         sql.append(orderByClause);
+        sql.append(limitClause);
         return sql.toString();
     }
 

@@ -61,6 +61,7 @@ public class Select<T> {
     }
 
     public T first(final Connection connection) {
+        statement.limit(1);
         List<T> entities = list(connection);
         return entities.isEmpty() ? null : firstOf(entities);
     }

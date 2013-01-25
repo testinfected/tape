@@ -53,6 +53,22 @@ public class SelectStatementTest {
     }
 
     @Test public void
+    supportsLimitsConditions() {
+        SelectStatement select = new SelectStatement("table", "a", "b", "c");
+        select.limit(1);
+
+        assertThat("sql", select.toSql(), equalTo("select a, b, c from table limit 1"));
+    }
+
+    @Test public void
+    supportsOffsetInLimits() {
+        SelectStatement select = new SelectStatement("table", "a", "b", "c");
+        select.limit(3, 5);
+
+        assertThat("sql", select.toSql(), equalTo("select a, b, c from table limit 3, 5"));
+    }
+
+    @Test public void
     usingAShorthandToSelectAllColumnsWillWorkWithAJoinToo() {
         SelectStatement select = new SelectStatement("this", "*");
         select.join("inner join", "other", "other.id = this.other_id");
@@ -68,5 +84,16 @@ public class SelectStatementTest {
         select.join("inner join", "other", "o.id = t.other_id", "b");
 
         assertThat("sql", select.toSql(), equalTo("select t.a, o.b from this t inner join other o on o.id = t.other_id"));
+    }
+
+    @Test public void
+    appliesClausesInCorrectOrder() {
+        SelectStatement select = new SelectStatement("this", "a");
+        select.where("a = ?");
+        select.join("inner join", "other", "other.id = this.other_id", "b", "c");
+        select.orderBy("a asc");
+        select.limit(1);
+
+        assertThat("sql", select.toSql(), equalTo("select a, b, c from this inner join other on other.id = this.other_id where a = ? order by a asc limit 1"));
     }
 }
