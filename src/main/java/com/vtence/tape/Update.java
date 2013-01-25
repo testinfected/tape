@@ -14,14 +14,14 @@ public class Update<T> {
     private final UpdateStatement statement;
     private final List<Object> parameters = new ArrayList<Object>();
 
+    public static <T> Update<T> set(Table<T> table, T entity) {
+        return new Update<T>(table, entity);
+    }
+
     public Update(Table<T> table, T entity) {
         this.set = table;
         this.entity = entity;
         this.statement = new UpdateStatement(table.name(), table.columnNames());
-    }
-
-    public static <T> Update<T> set(Table<T> table, T entity) {
-        return new Update<T>(table, entity);
     }
 
     public Update where(String clause, Object... parameters) {
@@ -35,8 +35,8 @@ public class Update<T> {
         try {
             update = connection.prepareStatement(statement.toSql());
             set.dehydrate(update, entity);
-            for (int i = 1; i <= parameters.size(); i++) {
-                JDBC.setParameter(update, set.columnCount() + i, 1);
+            for (int i = 0; i < parameters.size(); i++) {
+                JDBC.setParameter(update, set.columnCount() + i + 1, parameters.get(i));
             }
             execute(update);
         } catch (SQLException e) {
