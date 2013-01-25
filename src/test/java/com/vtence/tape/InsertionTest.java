@@ -49,7 +49,7 @@ public class InsertionTest {
             }
         });
 
-        Product record = Select.from(products).single(connection);
+        Product record = Select.from(products).first(connection);
         assertThat("inserted record", record, samePropertyValuesAs(original));
     }
 

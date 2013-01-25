@@ -50,7 +50,7 @@ public class UpdateTest {
             }
         });
 
-        Product record = Select.from(products).where("name = ?", "Labrador Retriever").single(connection);
+        Product record = Select.from(products).where("name = ?", "Labrador Retriever").first(connection);
         assertThat("updated record", record, samePropertyValuesAs(original));
     }
 

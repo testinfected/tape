@@ -76,7 +76,7 @@ public class SelectionTest {
     retrievingASingleRecordWithAllColumns() throws Exception {
         Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
 
-        Product record = Select.from(products).single(connection);
+        Product record = Select.from(products).first(connection);
         assertThat("record", record, sameProductAs(original));
     }
 
@@ -104,7 +104,7 @@ public class SelectionTest {
     selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() throws Exception {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
-        Product selection = Select.from(products).where("name = ?", "Labrador").single(connection);
+        Product selection = Select.from(products).where("name = ?", "Labrador").first(connection);
         assertThat("selection", selection, is(productNamed("Labrador")));
     }
 
@@ -114,7 +114,7 @@ public class SelectionTest {
                 aProduct().named("French Bulldog").describedAs("male"),
                 aProduct().named("Labrador Retriever").describedAs("male"));
 
-        Product selection = Select.from(products).where("name like ? and description = ?", "%Bulldog", "male").single(connection);
+        Product selection = Select.from(products).where("name like ? and description = ?", "%Bulldog", "male").first(connection);
         assertThat("selection", selection, is(productNamed("French Bulldog")));
     }
 
