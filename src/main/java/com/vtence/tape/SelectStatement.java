@@ -49,7 +49,7 @@ public class SelectStatement {
     }
 
     private void appendJoinClause(String tableName, String joinType, String joinCondition) {
-        joinClause.append(" ").append(joinType).append(" ").append(tableName);
+        joinClause.append(" ").append(joinType).append(" join ").append(tableName);
         if (aliased(tableName)) {
             joinClause.append(" ").append(aliasOf(tableName));
         }

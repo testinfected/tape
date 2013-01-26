@@ -39,13 +39,13 @@ public class Select<T> {
 
     public Select<T> join(Table<?> table, String alias, String condition) {
         alias(table, alias);
-        statement.join("join", table.name(), condition, table.columnNames());
+        statement.join("inner", table.name(), condition, table.columnNames());
         return this;
     }
 
     public Select<T> leftJoin(Table<?> table, String alias, String condition) {
         alias(table, alias);
-        statement.join("left join", table.name(), condition, table.columnNames());
+        statement.join("left", table.name(), condition, table.columnNames());
         return this;
     }
 

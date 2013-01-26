@@ -47,9 +47,9 @@ public class SelectStatementTest {
     @Test public void
     supportsJoinConditions() {
         SelectStatement select = new SelectStatement("this", "a", "b", "c");
-        select.join("inner join", "other", "other.id = this.other_id", "d", "e", "f");
+        select.join("left outer", "other", "other.id = this.other_id", "d", "e", "f");
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c, d, e, f from this inner join other on other.id = this.other_id"));
+        assertThat("sql", select.toSql(), equalTo("select a, b, c, d, e, f from this left outer join other on other.id = this.other_id"));
     }
 
     @Test public void
@@ -71,7 +71,7 @@ public class SelectStatementTest {
     @Test public void
     usingAShorthandToSelectAllColumnsWillWorkWithAJoinToo() {
         SelectStatement select = new SelectStatement("this", "*");
-        select.join("inner join", "other", "other.id = this.other_id");
+        select.join("inner", "other", "other.id = this.other_id");
 
         assertThat("sql", select.toSql(), equalTo("select * from this inner join other on other.id = this.other_id"));
     }
@@ -81,7 +81,7 @@ public class SelectStatementTest {
         SelectStatement select = new SelectStatement("this", "a");
         select.aliasTableName("this", "t");
         select.aliasTableName("other", "o");
-        select.join("inner join", "other", "o.id = t.other_id", "b");
+        select.join("inner", "other", "o.id = t.other_id", "b");
 
         assertThat("sql", select.toSql(), equalTo("select t.a, o.b from this t inner join other o on o.id = t.other_id"));
     }
@@ -90,7 +90,7 @@ public class SelectStatementTest {
     appliesClausesInCorrectOrder() {
         SelectStatement select = new SelectStatement("this", "a");
         select.where("a = ?");
-        select.join("inner join", "other", "other.id = this.other_id", "b", "c");
+        select.join("inner", "other", "other.id = this.other_id", "b", "c");
         select.orderBy("a asc");
         select.limit(1);
 
