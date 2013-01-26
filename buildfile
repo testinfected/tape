@@ -1,4 +1,4 @@
-define 'tape', :group => 'com.vtence.tape', :version => '0.1' do
+define 'tape', :group => 'com.vtence.tape', :version => '0.2-SNAPSHOT' do
   compile.options.source = '1.7'
   compile.options.target = '1.7'
 
