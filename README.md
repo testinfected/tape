@@ -43,4 +43,4 @@ List<Item> bulldogs = Select.from(items).
 
 ## Learn More
 
-For further details and other examples, take a look at the [tests](https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape).
+For further details and other examples, head to the [Wiki](https://github.com/testinfected/tape/wiki) or take a look at the [tests](https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape).
