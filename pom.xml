@@ -12,7 +12,7 @@
     <artifactId>tape</artifactId>
     <packaging>jar</packaging>
     <name>Tape</name>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <description>A lightweight Java data mapping library</description>
     <url>https://github.com/testinfected/tape</url>
     <licenses>
