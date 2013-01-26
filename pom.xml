@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>Tape</name>
     <version>0.1-SNAPSHOT</version>
-    <description>A lightweight JDBC library for CRUD operations in Java</description>
+    <description>A lightweight Java data mapping library</description>
     <url>https://github.com/testinfected/tape</url>
     <licenses>
         <license>
@@ -25,14 +25,13 @@
 
     <scm>
         <connection>scm:git:git://github.com/testinfected/tape.git</connection>
-        <developerConnection>scm:hg:git+ssh://git@github.com:testinfected/tape.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:testinfected/tape.git</developerConnection>
         <url>https://github.com/testinfected/tape</url>
     </scm>
     <developers>
         <developer>
             <id>testinfected</id>
             <name>Vincent Tencé</name>
-            <email>vtence@gmail.com</email>
         </developer>
     </developers>
 
