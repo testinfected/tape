@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 
-public class SelectStatement implements SqlStatement {
+public class SelectStatement {
 
     private final String table;
     private final Map<String, List<String>> columns = new HashMap<String, List<String>>();
