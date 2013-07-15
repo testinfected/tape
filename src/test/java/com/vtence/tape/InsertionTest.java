@@ -54,7 +54,7 @@ public class InsertionTest {
     }
 
     @Test public void
-    insertingAEntityWillSetItsIdentifier() throws Exception {
+    insertingAnEntityWillSetItsIdentifier() throws Exception {
         final Product entity = aProduct().build();
         assertThat("orginal id", idOf(entity), nullValue());
 
