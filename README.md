@@ -35,7 +35,7 @@ Tape is not:
 * An object-oriented language over SQL
 * A code generation framework. It does not try to generate Java representations of your database schema. You have to do that yourself.
 
-The intention is simply to make it fun and easy to work with JDBC.
+The intention is simply to make it fun and easy to write data access code without the need to resort to an ORM framework.
 
 ## Learn More
 
