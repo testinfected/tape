@@ -31,17 +31,29 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2>What is Tape?</h2>
+        <h2>
+<a name="what-is-tape" class="anchor" href="#what-is-tape"><span class="octicon octicon-link"></span></a>What is Tape?</h2>
 
-<p>Tape is a lightweight data mapping library.</p>
+<p>Tape is a lightweight data mapping library, designed as a fluent API over JDBC.</p>
 
-<p>It was specifically designed as a fluent API over JDBC for simple CRUD operations.</p>
+<h2>
+<a name="what-does-it-look-like" class="anchor" href="#what-does-it-look-like"><span class="octicon octicon-link"></span></a>What does it look like?</h2>
 
-<h2>Why Tape?</h2>
+<p>Following is a simple illustration of how Tape may be used.</p>
 
-<p>So that I could write persistence code using plain old JDBC instead of having to use an heavyweight ORM framework.</p>
+<div class="highlight highlight-java"><pre><span class="c1">// Describe the mapping for Items and Products</span>
+<span class="n">Table</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span> <span class="n">products</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">Table</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="n">items</span> <span class="o">=</span> <span class="o">...</span>
 
-<h2>How does it work?</h2>
+<span class="c1">// Select all items whose product name is 'Bulldog' using the given connection</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="n">bulldogs</span> <span class="o">=</span> <span class="n">Select</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">items</span><span class="o">).</span>
+                          <span class="n">join</span><span class="o">(</span><span class="n">products</span><span class="o">,</span> <span class="s">"items.product_id = products.id"</span><span class="o">).</span>
+                          <span class="n">where</span><span class="o">(</span><span class="s">"products.name = ?"</span><span class="o">,</span> <span class="s">"Bulldog"</span><span class="o">).</span>
+                          <span class="n">list</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+</pre></div>
+
+<h2>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How does it work?</h2>
 
 <p>Tape is designed to be:</p>
 
@@ -58,24 +70,10 @@
 <li>An abstraction over SQL. The intention is to retain the simplicity and power of SQL as a language</li>
 <li>An object-oriented language over SQL</li>
 <li>A code generation framework. It does not try to generate Java representations of your database schema. You have to do that yourself.</li>
-</ul><p>The intention is simply to make it easier to work with JDBC for typical CRUD scenarios.</p>
+</ul><p>The intention is simply to make it fun and easy to work with JDBC.</p>
 
-<h2>What does it look like?</h2>
-
-<p>Following is a simple illustration of how Tape may be used.</p>
-
-<div class="highlight"><pre><span class="c1">// Describe the mapping for Items and Products</span>
-<span class="n">Table</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span> <span class="n">products</span> <span class="o">=</span> <span class="o">...</span>
-<span class="n">Table</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="n">items</span> <span class="o">=</span> <span class="o">...</span>
-
-<span class="c1">// Select all items whose product name is 'Bulldog' using the given connection</span>
-<span class="n">List</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="n">bulldogs</span> <span class="o">=</span> <span class="n">Select</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">items</span><span class="o">).</span>
-                          <span class="n">join</span><span class="o">(</span><span class="n">products</span><span class="o">,</span> <span class="s">"items.product_id = products.id"</span><span class="o">).</span>
-                          <span class="n">where</span><span class="o">(</span><span class="s">"products.name = ?"</span><span class="o">,</span> <span class="s">"Bulldog"</span><span class="o">).</span>
-                          <span class="n">list</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
-</pre></div>
-
-<h2>Learn More</h2>
+<h2>
+<a name="learn-more" class="anchor" href="#learn-more"><span class="octicon octicon-link"></span></a>Learn More</h2>
 
 <p>For further details and other examples, head to the <a href="https://github.com/testinfected/tape/wiki">Wiki</a> or take a look at the <a href="https://github.com/testinfected/tape/blob/master/src/test/java/com/vtence/tape">tests</a>.</p>
       </section>
