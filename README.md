@@ -2,30 +2,7 @@
 
 ## What is Tape?
 
-Tape is a lightweight data mapping library.
-
-It was specifically designed as a fluent API over JDBC for simple CRUD operations.
-
-## Why Tape?
-
-So that I could write persistence code using plain old JDBC instead of having to use an heavyweight ORM framework.
-
-## How does it work?
-
-Tape is designed to be:
-* Lightweight - without any dependency
-* Small - easy to understand in a short amount of time
-* Transparent - without magic happening behind the the scenes
-* Fast to setup and fire - so your database integration tests run fast
-* Easy to get started with
-
-Tape is not:
-* An Object Relational Mapping (ORM) framework. There are already good ORM frameworks available
-* An abstraction over SQL. The intention is to retain the simplicity and power of SQL as a language
-* An object-oriented language over SQL
-* A code generation framework. It does not try to generate Java representations of your database schema. You have to do that yourself.
-
-The intention is simply to make it easier to work with JDBC for typical CRUD scenarios.
+Tape is a lightweight data mapping library, designed as a fluent API over JDBC.
 
 ## What does it look like?
 
@@ -42,6 +19,23 @@ List<Item> bulldogs = Select.from(items).
                           where("products.name = ?", "Bulldog").
                           list(connection);
 ```
+
+## How does it work?
+
+Tape is designed to be:
+* Lightweight - without any dependency
+* Small - easy to understand in a short amount of time
+* Transparent - without magic happening behind the the scenes
+* Fast to setup and fire - so your database integration tests run fast
+* Easy to get started with
+
+Tape is not:
+* An Object Relational Mapping (ORM) framework. There are already good ORM frameworks available
+* An abstraction over SQL. The intention is to retain the simplicity and power of SQL as a language
+* An object-oriented language over SQL
+* A code generation framework. It does not try to generate Java representations of your database schema. You have to do that yourself.
+
+The intention is simply to make it fun and easy to work with JDBC.
 
 ## Learn More
 
