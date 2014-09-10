@@ -1,7 +1,7 @@
 package com.vtence.tape.testmodel.records;
 
 import com.vtence.tape.Column;
-import com.vtence.tape.Table;
+import com.vtence.tape.Record;
 import com.vtence.tape.testmodel.Access;
 import com.vtence.tape.testmodel.Item;
 import com.vtence.tape.testmodel.Product;
@@ -13,20 +13,22 @@ import java.sql.SQLException;
 
 public class ItemRecord extends AbstractRecord<Item> {
 
-    private final Table<Product> products;
+    private final Column<Long> id;
+    private final Column<String> number;
+    private final Column<Long> product;
+    private final Column<BigDecimal> price;
 
-    private final Table<Item> items = new Table<Item>("items", this);
+    private final Record<Product> products;
 
-    private final Column<Long> id = items.LONG("id");
-    private final Column<String> number = items.STRING("number");
-    private final Column<Long> product = items.LONG("product_id");
-    private final Column<BigDecimal> price = items.BIG_DECIMAL("price");
-
-    public static Table<Item> itemsOf(Table<Product> products) {
-        return new ItemRecord(products).items;
-    }
-
-    public ItemRecord(Table<Product> products) {
+    public ItemRecord(Column<Long> id,
+                      Column<String> number,
+                      Column<Long> product,
+                      Column<BigDecimal> price,
+                      Record<Product> products) {
+        this.id = id;
+        this.number = number;
+        this.product = product;
+        this.price = price;
         this.products = products;
     }
 

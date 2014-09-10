@@ -6,7 +6,7 @@ import com.vtence.tape.support.TestEnvironment;
 import com.vtence.tape.support.UnitOfWork;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
-import com.vtence.tape.testmodel.records.ProductRecord;
+import com.vtence.tape.testmodel.records.Schema;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class UpdateTest {
     Connection connection = database.connect();
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
-    Table<Product> products = ProductRecord.products();
+    Table<Product> products = Schema.products();
 
     @Before public void
     resetDatabase() throws Exception {

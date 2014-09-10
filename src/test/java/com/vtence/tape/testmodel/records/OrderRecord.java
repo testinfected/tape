@@ -1,7 +1,7 @@
 package com.vtence.tape.testmodel.records;
 
 import com.vtence.tape.Column;
-import com.vtence.tape.Table;
+import com.vtence.tape.Record;
 import com.vtence.tape.testmodel.Order;
 import com.vtence.tape.testmodel.OrderNumber;
 import com.vtence.tape.testmodel.PaymentMethod;
@@ -15,20 +15,17 @@ import static com.vtence.tape.testmodel.Access.idOf;
 
 public class OrderRecord extends AbstractRecord<Order> {
 
-    private final Table<? extends PaymentMethod> payments;
+    private final Column<Long> id;
+    private final Column<String> number;
+    private final Column<Long> payment;
 
-    private final Table<Order> orders = new Table<Order>("orders", this);
+    private final Record<? extends PaymentMethod> payments;
 
-    private final Column<Long> id = orders.LONG("id");
-    private final Column<String> number = orders.STRING("number");
-    private final Column<Long> payment = orders.LONG("payment_id");
-
-    public static Table<Order> ordersWith(Table<? extends PaymentMethod> payments) {
-        return new OrderRecord(payments).orders;
-    }
-
-    public OrderRecord(Table<? extends PaymentMethod> payments) {
+    public OrderRecord(Column<Long> id, Column<String> number, Column<Long> payment, Record<? extends PaymentMethod> payments) {
         this.payments = payments;
+        this.id = id;
+        this.number = number;
+        this.payment = payment;
     }
 
     public Order hydrate(ResultSet rs) throws SQLException {

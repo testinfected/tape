@@ -1,7 +1,6 @@
 package com.vtence.tape.testmodel.records;
 
 import com.vtence.tape.Column;
-import com.vtence.tape.Table;
 import com.vtence.tape.testmodel.Product;
 
 import java.sql.PreparedStatement;
@@ -12,15 +11,19 @@ import static com.vtence.tape.testmodel.Access.idOf;
 
 public class ProductRecord extends AbstractRecord<Product> {
 
-    private final Table<Product> products = new Table<Product>("products", this);
+    private final Column<Long> id;
+    private final Column<String> number;
+    private final Column<String> name;
+    private final Column<String> description;
 
-    private final Column<Long> id = products.LONG("id");
-    private final Column<String> number = products.STRING("number");
-    private final Column<String> name = products.STRING("name");
-    private final Column<String> description = products.STRING("description");
-
-    public static Table<Product> products() {
-        return new ProductRecord().products;
+    public ProductRecord(Column<Long> id,
+                         Column<String> number,
+                         Column<String> name,
+                         Column<String> description) {
+        this.id = id;
+        this.number = number;
+        this.name = name;
+        this.description = description;
     }
 
     public Product hydrate(ResultSet rs) throws SQLException {

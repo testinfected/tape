@@ -11,11 +11,7 @@ import com.vtence.tape.testmodel.Order;
 import com.vtence.tape.testmodel.PaymentMethod;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
-import com.vtence.tape.testmodel.records.ItemRecord;
-import com.vtence.tape.testmodel.records.LineItemRecord;
-import com.vtence.tape.testmodel.records.OrderRecord;
-import com.vtence.tape.testmodel.records.PaymentRecord;
-import com.vtence.tape.testmodel.records.ProductRecord;
+import com.vtence.tape.testmodel.records.Schema;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -56,11 +52,11 @@ public class SelectionTest {
     Connection connection = database.connect();
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
-    Table<Product> products = ProductRecord.products();
-    Table<Item> items = ItemRecord.itemsOf(products);
-    Table<PaymentMethod> payments = PaymentRecord.payments();
-    Table<Order> orders = OrderRecord.ordersWith(payments);
-    Table<LineItem> lineItems = LineItemRecord.lineItems();
+    Table<Product> products = Schema.products();
+    Table<Item> items = Schema.itemsOf(products);
+    Table<PaymentMethod> payments = Schema.payments();
+    Table<Order> orders = Schema.ordersWith(payments);
+    Table<LineItem> lineItems = Schema.lineItems();
 
     @Before public void
     resetDatabase() throws Exception {

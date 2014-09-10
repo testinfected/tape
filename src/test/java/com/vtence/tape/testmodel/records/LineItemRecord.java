@@ -1,7 +1,6 @@
 package com.vtence.tape.testmodel.records;
 
 import com.vtence.tape.Column;
-import com.vtence.tape.Table;
 import com.vtence.tape.testmodel.LineItem;
 
 import java.math.BigDecimal;
@@ -14,16 +13,22 @@ import static com.vtence.tape.testmodel.Access.orderOf;
 
 public class LineItemRecord extends AbstractRecord<LineItem> {
 
-    private final Table<LineItem> lineItems = new Table<LineItem>("line_items", this);
+    private final Column<Long> id;
+    private final Column<String> number;
+    private final Column<BigDecimal> unitPrice;
+    private final Column<Long> order;
+    private final Column<Integer> line;
 
-    private final Column<Long> id = lineItems.LONG("id");
-    private final Column<String> number = lineItems.STRING("item_number");
-    private final Column<BigDecimal> unitPrice = lineItems.BIG_DECIMAL("item_unit_price");
-    private final Column<Long> order = lineItems.LONG("order_id");
-    private final Column<Integer> line = lineItems.INT("order_line");
-
-    public static Table<LineItem> lineItems() {
-        return new LineItemRecord().lineItems;
+    public LineItemRecord(Column<Long> id,
+                          Column<String> number,
+                          Column<BigDecimal> unitPrice,
+                          Column<Long> order,
+                          Column<Integer> line) {
+        this.id = id;
+        this.number = number;
+        this.unitPrice = unitPrice;
+        this.order = order;
+        this.line = line;
     }
 
     public LineItem hydrate(ResultSet rs) throws SQLException {
