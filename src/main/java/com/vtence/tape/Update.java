@@ -30,7 +30,7 @@ public class Update<T> {
         return this;
     }
 
-    public int execute(Connection connection) throws SQLException {
+    public int execute(Connection connection) {
         PreparedStatement update = null;
         try {
             update = connection.prepareStatement(statement.toSql());

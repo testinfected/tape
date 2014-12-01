@@ -24,6 +24,13 @@ public class JDBC {
 
     }
 
+    public static void rollback(Connection connection) {
+        try {
+            connection.rollback();
+        } catch (SQLException ignored) {
+        }
+    }
+
     public static void setParameter(PreparedStatement st, int index, Object value) throws SQLException {
         int sqlType = st.getParameterMetaData().getParameterType(index);
         st.setObject(index, value, sqlType);

@@ -1,5 +1,6 @@
 package com.vtence.tape.support;
 
+import com.vtence.tape.JDBC;
 import com.vtence.tape.JDBCException;
 
 import java.sql.Connection;
@@ -12,27 +13,13 @@ public class JDBCTransactor {
         this.connection = connection;
     }
 
-    public void perform(UnitOfWork unitOfWork) throws Exception {
-        boolean autoCommit = connection.getAutoCommit();
-
+    public void perform(UnitOfWork unitOfWork) {
         try {
-            connection.setAutoCommit(false);
             unitOfWork.execute();
             connection.commit();
         } catch (SQLException e) {
+            JDBC.rollback(connection);
             throw new JDBCException("Could not commit transaction", e);
-        } catch (Exception e) {
-            connection.rollback();
-            throw e;
-        } finally {
-            resetAutoCommitTo(autoCommit);
-        }
-    }
-
-    private void resetAutoCommitTo(boolean autoCommit) {
-        try {
-            connection.setAutoCommit(autoCommit);
-        } catch (SQLException ignored) {
         }
     }
 }

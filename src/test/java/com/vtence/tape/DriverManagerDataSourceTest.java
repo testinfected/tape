@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 
 public class DriverManagerDataSourceTest {
 
-    TestEnvironment env = TestEnvironment.inMemory();
+    TestEnvironment env = TestEnvironment.memory();
     DriverManagerDataSource connectionSource = new DriverManagerDataSource(env.url, env.username, env.password);
     Connection connection;
 
@@ -30,14 +30,14 @@ public class DriverManagerDataSourceTest {
     }
 
     @Test public void
-    configuresConnectionFromProperties() throws Exception {
+    configuresConnectionFromProperties() throws SQLException {
         DatabaseMetaData metaData = connection.getMetaData();
         assertThat("url", metaData.getURL(), equalTo(env.url));
         assertThat("username", metaData.getUserName(), equalToIgnoringCase(env.username));
     }
 
     @Test public void
-    doesNotReuseConnections() throws Exception {
+    doesNotReuseConnections() throws SQLException {
         Connection other = connectionSource.getConnection();
         try {
             assertThat("other connection", other, not(sameInstance(connection)));

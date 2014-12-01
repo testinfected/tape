@@ -26,7 +26,7 @@ public class Delete<T> {
         return this;
     }
 
-    public int execute(Connection connection) throws SQLException {
+    public int execute(Connection connection) {
         PreparedStatement delete = null;
         try {
             delete = connection.prepareStatement(statement.toSql());

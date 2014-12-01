@@ -2,19 +2,12 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.support.TestEnvironment;
 import com.vtence.tape.support.UnitOfWork;
-import com.vtence.tape.testmodel.CreditCardDetails;
-import com.vtence.tape.testmodel.Item;
-import com.vtence.tape.testmodel.LineItem;
-import com.vtence.tape.testmodel.Order;
-import com.vtence.tape.testmodel.PaymentMethod;
-import com.vtence.tape.testmodel.Product;
+import com.vtence.tape.testmodel.*;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
 import org.hamcrest.Matcher;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -23,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.Access.idOf;
 import static com.vtence.tape.testmodel.Access.orderOf;
 import static com.vtence.tape.testmodel.builders.CreditCardDetailsBuilder.aVisa;
@@ -40,16 +34,14 @@ import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 public class SelectionTest {
 
-    Database database = Database.in(TestEnvironment.inMemory());
-    Connection connection = database.connect();
+    Database database = Database.in(memory());
+
+    Connection connection = database.start();
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
     Table<Product> products = Schema.products();
@@ -58,18 +50,13 @@ public class SelectionTest {
     Table<Order> orders = Schema.ordersWith(payments);
     Table<LineItem> lineItems = Schema.lineItems();
 
-    @Before public void
-    resetDatabase() throws Exception {
-        database.reset();
-    }
-
     @After public void
-    closeConnection() {
-        JDBC.close(connection);
+    stopDatabase() {
+        database.stop();
     }
 
     @Test public void
-    retrievingASingleRecordWithAllColumns() throws Exception {
+    retrievingASingleRecordWithAllColumns() {
         Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
 
         Product record = Select.from(products).first(connection);
@@ -77,7 +64,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    selectingAllRecordsFromATable() throws Exception {
+    selectingAllRecordsFromATable() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
         Collection<Product> selection = Select.from(products).list(connection);
@@ -89,7 +76,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    selectingTheFirstInACollectionOfRecords() throws Exception {
+    selectingTheFirstInACollectionOfRecords() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
         Product selection = Select.from(products).first(connection);
@@ -97,7 +84,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() throws Exception {
+    selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
         Product selection = Select.from(products).where("name = ?", "Labrador").first(connection);
@@ -105,7 +92,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    extractingRecordsBasedOnMultipleCriteria() throws Exception {
+    extractingRecordsBasedOnMultipleCriteria() {
         persist(aProduct().named("English Bulldog").describedAs("female"),
                 aProduct().named("French Bulldog").describedAs("male"),
                 aProduct().named("Labrador Retriever").describedAs("male"));
@@ -115,7 +102,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    aliasingTheTableName() throws Exception {
+    aliasingTheTableName() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
         List<Product> selection = Select.from(products, "p").where("p.name = ?", "Labrador").list(connection);
@@ -123,7 +110,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    queryingDataFromMultipleTables() throws Exception {
+    queryingDataFromMultipleTables() {
         Product boxer = persist(aProduct().named("Boxer").withNumber("BOXER"));
         persist(a(boxer).priced("1199.00"));
         Product bulldog = persist(aProduct().named("Bulldog").withNumber("BULLDOG"));
@@ -139,7 +126,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() throws Exception {
+    queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() {
         persist(
                 anOrder().withNumber("00000001"),
                 anOrder().withNumber("10000001"),
@@ -155,7 +142,7 @@ public class SelectionTest {
     }
 
     @SuppressWarnings("unchecked") @Test public void
-    orderingExtractedRecords() throws Exception {
+    orderingExtractedRecords() {
         Order order = persist(anOrder().containing(
                 anItem().withNumber("00000001"),
                 anItem().withNumber("00000002"),
@@ -175,19 +162,19 @@ public class SelectionTest {
                 lineWithItemNumber("00000001")));
     }
 
-    private <T> void persist(final Builder<T>... builders) throws Exception {
+    private <T> void persist(final Builder<T>... builders) {
         for (final Builder<T> builder : builders) {
             persist(builder);
         }
     }
 
-    private <T> T persist(final Builder<T> builder) throws Exception {
+    private <T> T persist(final Builder<T> builder) {
         return persist(builder.build());
     }
 
-    private <T> T persist(final T entity) throws Exception {
+    private <T> T persist(final T entity) {
         transactor.perform(new UnitOfWork() {
-            public void execute() throws Exception {
+            public void execute() {
                 Insert.into(tableFor(entity), entity).execute(connection);
             }
         });

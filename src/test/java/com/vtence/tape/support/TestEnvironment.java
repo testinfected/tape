@@ -12,7 +12,7 @@ public class TestEnvironment {
         this.password = password;
     }
 
-    public static TestEnvironment inMemory() {
+    public static TestEnvironment memory() {
         return new TestEnvironment("jdbc:h2:mem:test", "tape", "test");
     }
 }
