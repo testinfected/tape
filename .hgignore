@@ -6,3 +6,4 @@ syntax: glob
 .DS_Store
 target
 reports
+buildr.rb
