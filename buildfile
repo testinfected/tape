@@ -15,10 +15,8 @@ define 'tape', :group => 'com.vtence.tape', :version => VERSION_NUMBER do
   test.with :hamcrest, :h2, :flyway
 
   package :jar
-  package_with_javadoc
-  package_with_sources
-
-  package :test_jar
+  package :javadoc
+  package :sources
 
   pom.name = 'Tape'
   pom.description = 'A lightweight Java data mapping library'
