@@ -9,7 +9,10 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.junit.Assert.assertThat;
 
@@ -47,7 +50,19 @@ public class DriverManagerDataSourceTest {
     }
 
     @Test public void
-    disablesAutoCommit() throws SQLException {
-        assertThat("auto commit", connection.getAutoCommit(), is(equalTo(false)));
+    autoCommitsByDefault() throws SQLException {
+        assertThat("auto commit", connection.getAutoCommit(), is(equalTo(true)));
+    }
+
+    @Test public void
+    setsAutoCommit() throws SQLException {
+        connectionSource.setAutoCommit(false);
+        Connection connection = connectionSource.getConnection();
+
+        try {
+            assertThat("auto commit", connection.getAutoCommit(), is(equalTo(false)));
+        } finally {
+            connection.close();
+        }
     }
 }

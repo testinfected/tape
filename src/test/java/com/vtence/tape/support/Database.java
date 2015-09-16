@@ -4,14 +4,13 @@ import com.vtence.tape.DriverManagerDataSource;
 import com.vtence.tape.JDBC;
 import com.vtence.tape.JDBCException;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Database {
 
+    private final DriverManagerDataSource dataSource;
     private final DatabaseMigrator migrator;
-    private final DataSource dataSource;
     private final DatabaseCleaner cleaner;
 
     private Connection connection;
@@ -27,6 +26,7 @@ public class Database {
     }
 
     public Connection start() {
+        dataSource.setAutoCommit(false);
         connection = openConnection();
         migrator.migrate();
         cleaner.clean(connection);
