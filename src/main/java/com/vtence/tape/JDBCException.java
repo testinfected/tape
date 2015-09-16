@@ -12,12 +12,15 @@ public class JDBCException extends RuntimeException {
         super(message);
     }
 
+    public JDBCException(SQLException cause) {
+        super(cause);
+    }
+
     public SQLException getCause() {
         return (SQLException) super.getCause();
     }
 
-    public boolean causedBy(Class<? extends SQLException> sqlException) {
-        if (sqlException == null) return false;
-        return sqlException.isInstance(getCause());
+    public boolean isCausedBy(Class<? extends SQLException> sqlException) {
+        return sqlException != null && sqlException.isInstance(getCause());
     }
 }
