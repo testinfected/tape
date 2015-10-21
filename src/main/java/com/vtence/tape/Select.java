@@ -10,24 +10,24 @@ import java.util.List;
 
 public class Select<T> {
 
-    private final Table<T> from;
+    private final Table<? extends T> from;
     private final SelectStatement statement;
     private final List<Object> parameters = new ArrayList<Object>();
 
-    public static <T> Select<T> from(final Table<T> table) {
+    public static <T> Select<T> from(final Table<? extends T> table) {
         return new Select<T>(table);
     }
 
-    public static <T> Select<T> from(final Table<T> table, String alias) {
+    public static <T> Select<T> from(final Table<? extends T> table, String alias) {
         return new Select<T>(table, alias);
     }
 
-    public Select(Table<T> from) {
+    public Select(Table<? extends T> from) {
         this.from = from;
         this.statement = new SelectStatement(from.name(), from.columnNames());
     }
 
-    public Select(Table<T> from, String alias) {
+    public Select(Table<? extends T> from, String alias) {
         this(from);
         alias(from, alias);
     }

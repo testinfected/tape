@@ -9,16 +9,16 @@ import java.util.List;
 
 public class Update<T> {
 
-    private final Table<T> set;
+    private final Table<? super T> set;
     private final T entity;
     private final UpdateStatement statement;
     private final List<Object> parameters = new ArrayList<Object>();
 
-    public static <T> Update<T> set(Table<T> table, T entity) {
+    public static <T> Update<T> set(Table<? super T> table, T entity) {
         return new Update<T>(table, entity);
     }
 
-    public Update(Table<T> table, T entity) {
+    public Update(Table<? super T> table, T entity) {
         this.set = table;
         this.entity = entity;
         this.statement = new UpdateStatement(table.name(), table.columnNames());

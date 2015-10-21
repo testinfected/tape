@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class Insert<T> {
-    private final Table<T> into;
+    private final Table<? super T> into;
     private final T entity;
     private final InsertStatement statement;
 
-    public static <T> Insert<T> into(Table<T> table, T entity) {
+    public static <T> Insert<T> into(Table<? super T> table, T entity) {
         return new Insert<T>(table, entity);
     }
 
-    public Insert(Table<T> table, final T entity) {
+    public Insert(Table<? super T> table, final T entity) {
         this.into = table;
         this.entity = entity;
         this.statement = new InsertStatement(table.name(), table.columnNames());
