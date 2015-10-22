@@ -21,7 +21,7 @@ public class Update<T> {
     public Update(Table<? super T> table, T entity) {
         this.set = table;
         this.entity = entity;
-        this.statement = new UpdateStatement(table.name(), table.columnNames());
+        this.statement = new UpdateStatement(table.name(), table.columnNames(false));
     }
 
     public Update where(String clause, Object... parameters) {
@@ -36,7 +36,7 @@ public class Update<T> {
             update = connection.prepareStatement(statement.toSql());
             set.dehydrate(update, entity);
             for (int i = 0; i < parameters.size(); i++) {
-                JDBC.setParameter(update, set.columnCount() + i + 1, parameters.get(i));
+                JDBC.setParameter(update, parameterIndex(i), parameters.get(i));
             }
             return update.executeUpdate();
         } catch (SQLException e) {
@@ -44,5 +44,9 @@ public class Update<T> {
         } finally {
             JDBC.close(update);
         }
+    }
+
+    private int parameterIndex(int i) {
+        return set.columnCount(false) + i + 1;
     }
 }

@@ -18,7 +18,7 @@ public class Insert<T> {
     public Insert(Table<? super T> table, final T entity) {
         this.into = table;
         this.entity = entity;
-        this.statement = new InsertStatement(table.name(), table.columnNames());
+        this.statement = new InsertStatement(table.name(), table.columnNames(false));
     }
 
     public int execute(final Connection connection) {

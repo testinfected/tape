@@ -13,7 +13,10 @@ import java.sql.Connection;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
 public class InsertionTest {
@@ -55,7 +58,7 @@ public class InsertionTest {
             }
         });
 
-        assertThat("updated id", idOf(entity), not(nullValue()));
+        assertThat("generated id", idOf(entity), not(nullValue()));
     }
 
     private Long idOf(Object entity) {
