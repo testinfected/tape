@@ -44,7 +44,6 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
 
     public void dehydrate(PreparedStatement st, PaymentMethod payment) throws SQLException {
         CreditCardDetails creditCard = (CreditCardDetails) payment;
-        id.set(st, idOf(creditCard).get());
         cardType.set(st, creditCard.getCardType().name());
         cardNumber.set(st, creditCard.getCardNumber());
         cardExpiryDate.set(st, creditCard.getCardExpiryDate());

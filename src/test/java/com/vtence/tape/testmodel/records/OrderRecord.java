@@ -37,7 +37,6 @@ public class OrderRecord extends AbstractRecord<Order> {
     }
 
     public void dehydrate(PreparedStatement st, Order order) throws SQLException {
-        id.set(st, idOf(order).get());
         number.set(st, order.getNumber());
         payment.set(st, order.isPaid() ? idOf(order.getPaymentMethod()).get() : null);
     }
