@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/testinfected/tape.png?branch=master)](https://travis-ci.org/testinfected/tape)
+[![Build Status](https://travis-ci.org/testinfected/tape.svg?branch=master)](https://travis-ci.org/testinfected/tape)
 [![Maven Central](https://img.shields.io/maven-central/v/com.vtence.tape/tape.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.vtence.tape/tape)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat)](http://vtence.mit-license.org)
 
