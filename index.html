@@ -43,14 +43,14 @@
 
 <p>Following is a simple illustration of how Tape may be used.</p>
 
-<div class="highlight highlight-java"><pre><span class="pl-c">// Describe the mapping for Items and Products</span>
-<span class="pl-st">Table&lt;<span class="pl-stj">Product</span>&gt;</span> products <span class="pl-k">=</span> <span class="pl-c1">...</span>
-<span class="pl-st">Table&lt;<span class="pl-stj">Item</span>&gt;</span> items <span class="pl-k">=</span> <span class="pl-c1">...</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Describe the mapping for Items and Products</span>
+<span class="pl-k">Table&lt;<span class="pl-smi">Product</span>&gt;</span> products <span class="pl-k">=</span> <span class="pl-c1">...</span>
+<span class="pl-k">Table&lt;<span class="pl-smi">Item</span>&gt;</span> items <span class="pl-k">=</span> <span class="pl-c1">...</span>
 
 <span class="pl-c">// Select all items whose product name is 'Bulldog' using the given connection</span>
-<span class="pl-st">List&lt;<span class="pl-stj">Item</span>&gt;</span> bulldogs <span class="pl-k">=</span> <span class="pl-stj">Select</span><span class="pl-k">.</span>from(items)<span class="pl-c1">.</span>
-                          join(products, <span class="pl-s1"><span class="pl-pds">"</span>items.product_id = products.id<span class="pl-pds">"</span></span>)<span class="pl-c1">.</span>
-                          where(<span class="pl-s1"><span class="pl-pds">"</span>products.name = ?<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>Bulldog<span class="pl-pds">"</span></span>)<span class="pl-c1">.</span>
+<span class="pl-k">List&lt;<span class="pl-smi">Item</span>&gt;</span> bulldogs <span class="pl-k">=</span> <span class="pl-smi">Select</span><span class="pl-k">.</span>from(items)<span class="pl-c1">.</span>
+                          join(products, <span class="pl-s"><span class="pl-pds">"</span>items.product_id = products.id<span class="pl-pds">"</span></span>)<span class="pl-c1">.</span>
+                          where(<span class="pl-s"><span class="pl-pds">"</span>products.name = ?<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Bulldog<span class="pl-pds">"</span></span>)<span class="pl-c1">.</span>
                           list(connection);</pre></div>
 
 <h2>
@@ -88,7 +88,7 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Tape maintained by <a href="https://github.com/testinfected">testinfected</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
