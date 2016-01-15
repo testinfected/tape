@@ -31,7 +31,9 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p><a href="https://travis-ci.org/testinfected/tape"><img src="https://travis-ci.org/testinfected/tape.png?branch=master" alt="Build Status"></a></p>
+        <p><a href="https://travis-ci.org/testinfected/tape"><img src="https://travis-ci.org/testinfected/tape.png?branch=master" alt="Build Status"></a>
+<a href="https://maven-badges.herokuapp.com/maven-central/com.vtence.tape/tape"><img src="https://img.shields.io/maven-central/v/com.vtence.tape/tape.svg?style=flat" alt="Maven Central"></a>
+<a href="http://vtence.mit-license.org"><img src="http://img.shields.io/:license-mit-blue.svg?style=flat" alt="License"></a></p>
 
 <h2>
 <a id="what-is-tape" class="anchor" href="#what-is-tape" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Tape?</h2>
@@ -48,10 +50,10 @@
 <span class="pl-k">Table&lt;<span class="pl-smi">Item</span>&gt;</span> items <span class="pl-k">=</span> <span class="pl-c1">...</span>
 
 <span class="pl-c">// Select all items whose product name is 'Bulldog' using the given connection</span>
-<span class="pl-k">List&lt;<span class="pl-smi">Item</span>&gt;</span> bulldogs <span class="pl-k">=</span> <span class="pl-smi">Select</span><span class="pl-k">.</span>from(items)<span class="pl-c1">.</span>
-                          join(products, <span class="pl-s"><span class="pl-pds">"</span>items.product_id = products.id<span class="pl-pds">"</span></span>)<span class="pl-c1">.</span>
-                          where(<span class="pl-s"><span class="pl-pds">"</span>products.name = ?<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Bulldog<span class="pl-pds">"</span></span>)<span class="pl-c1">.</span>
-                          list(connection);</pre></div>
+<span class="pl-k">List&lt;<span class="pl-smi">Item</span>&gt;</span> bulldogs <span class="pl-k">=</span> <span class="pl-smi">Select</span><span class="pl-k">.</span>from(items)
+                            .join(products, <span class="pl-s"><span class="pl-pds">"</span>items.product_id = products.id<span class="pl-pds">"</span></span>)
+                            .where(<span class="pl-s"><span class="pl-pds">"</span>products.name = ?<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Bulldog<span class="pl-pds">"</span></span>)
+                            .list(connection);</pre></div>
 
 <h2>
 <a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>How does it work?</h2>
