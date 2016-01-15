@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/testinfected/tape.png?branch=master)](https://travis-ci.org/testinfected/tape)
+[![Maven Central](https://img.shields.io/maven-central/v/com.vtence.tape/tape.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.vtence.tape/tape)
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat)](http://vtence.mit-license.org)
+
 
 ## What is Tape?
 
@@ -14,10 +17,10 @@ Table<Product> products = ...
 Table<Item> items = ...
 
 // Select all items whose product name is 'Bulldog' using the given connection
-List<Item> bulldogs = Select.from(items).
-                          join(products, "items.product_id = products.id").
-                          where("products.name = ?", "Bulldog").
-                          list(connection);
+List<Item> bulldogs = Select.from(items)
+                            .join(products, "items.product_id = products.id")
+                            .where("products.name = ?", "Bulldog")
+                            .list(connection);
 ```
 
 ## How does it work?
