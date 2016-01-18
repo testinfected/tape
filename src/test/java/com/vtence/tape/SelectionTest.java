@@ -3,7 +3,12 @@ package com.vtence.tape;
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
 import com.vtence.tape.support.UnitOfWork;
-import com.vtence.tape.testmodel.*;
+import com.vtence.tape.testmodel.CreditCardDetails;
+import com.vtence.tape.testmodel.Item;
+import com.vtence.tape.testmodel.LineItem;
+import com.vtence.tape.testmodel.Order;
+import com.vtence.tape.testmodel.PaymentMethod;
+import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
 import org.hamcrest.Matcher;
@@ -34,8 +39,11 @@ import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 public class SelectionTest {
 
@@ -50,12 +58,14 @@ public class SelectionTest {
     Table<Order> orders = Schema.ordersWith(payments);
     Table<LineItem> lineItems = Schema.lineItems();
 
-    @After public void
+    @After
+    public void
     stopDatabase() {
         database.stop();
     }
 
-    @Test public void
+    @Test
+    public void
     retrievingASingleRecordWithAllColumns() {
         Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
 
@@ -63,7 +73,9 @@ public class SelectionTest {
         assertThat("record", record, sameProductAs(original));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     selectingAllRecordsFromATable() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
@@ -75,7 +87,9 @@ public class SelectionTest {
                 productNamed("Labrador")));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     selectingTheFirstInACollectionOfRecords() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
@@ -83,7 +97,9 @@ public class SelectionTest {
         assertThat("selection", selection, is(productNamed("Bulldog")));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
@@ -91,25 +107,35 @@ public class SelectionTest {
         assertThat("selection", selection, is(productNamed("Labrador")));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     extractingRecordsBasedOnMultipleCriteria() {
         persist(aProduct().named("English Bulldog").describedAs("female"),
                 aProduct().named("French Bulldog").describedAs("male"),
                 aProduct().named("Labrador Retriever").describedAs("male"));
 
-        Product selection = Select.from(products).where("name like ? and description = ?", "%Bulldog", "male").first(connection);
+        Product selection = Select.from(products)
+                                  .where("name like ? and description = ?", "%Bulldog", "male")
+                                  .first(connection);
         assertThat("selection", selection, is(productNamed("French Bulldog")));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     aliasingTheTableName() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
-        List<Product> selection = Select.from(products, "p").where("p.name = ?", "Labrador").list(connection);
+        List<Product> selection = Select.from(products, "p")
+                                        .where("p.name = ?", "Labrador")
+                                        .list(connection);
         assertThat("selection", selection, hasSize(1));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     queryingDataFromMultipleTables() {
         Product boxer = persist(aProduct().named("Boxer").withNumber("BOXER"));
         persist(a(boxer).priced("1199.00"));
@@ -117,31 +143,63 @@ public class SelectionTest {
         persist(a(bulldog).priced("899.00"));
         persist(a(bulldog).priced("699.00"));
 
-        List<Item> selection = Select.from(items, "item").
-                join(products, "product", "item.product_id = product.id").
-                where("product.name = ?", "Bulldog").
-                list(connection);
+        List<Item> selection = Select.from(items)
+                                     .join(products, "items.product_id = products.id")
+                                     .where("products.name = ?", "Bulldog")
+                                     .list(connection);
         assertThat("selection", selection, hasSize(2));
         assertThat("selection", selection, everyItem(itemWithProductNumber("BULLDOG")));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
+    queryingDataFromMultipleTablesWithTableAliases() {
+        Product bulldog = persist(aProduct().named("Bulldog").withNumber("BULLDOG"));
+        persist(a(bulldog).priced("899.00"));
+
+        Item selection = Select.from(items, "i")
+                               .join(products, "p", "i.product_id = p.id")
+                               .where("p.name = ?", "Bulldog")
+                               .first(connection);
+        assertThat("selection", selection, itemWithProductNumber("BULLDOG"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() {
         persist(
                 anOrder().withNumber("00000001"),
                 anOrder().withNumber("10000001"),
-                anOrder().withNumber("10000002").paidUsing(
-                        persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
+                anOrder().withNumber("10000002")
+                         .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
 
-        List<Order> selection = Select.from(orders, "o").
-                leftJoin(payments, "p", "o.payment_id = p.id").
-                where("o.number like ?", "1000%").
-                list(connection);
+        List<Order> selection = Select.from(orders)
+                                      .leftJoin(payments, "orders.payment_id = payments.id")
+                                      .where("orders.number like ?", "1000%")
+                                      .list(connection);
         assertThat("selection", selection, hasSize(2));
         assertThat("selection", selection, everyItem(orderWithNumber(startsWith("1000"))));
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
+    usingAliasesWithLeftJoins() {
+        persist(anOrder().withNumber("10000002")
+                         .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
+
+        Order selection = Select.from(orders, "o")
+                                .leftJoin(payments, "p", "o.payment_id = p.id")
+                                .where("o.number like ?", "1000%")
+                                .first(connection);
+        assertThat("selection", selection, orderWithNumber(startsWith("1000")));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
     orderingExtractedRecords() {
         Order order = persist(anOrder().containing(
                 anItem().withNumber("00000001"),
@@ -152,10 +210,10 @@ public class SelectionTest {
             persist(lineItem);
         }
 
-        List<LineItem> selection = Select.from(lineItems).
-                where("order_id = ?", idOf(order).get()).
-                orderBy("order_line desc").
-                list(connection);
+        List<LineItem> selection = Select.from(lineItems)
+                                         .where("order_id = ?", idOf(order).get())
+                                         .orderBy("order_line desc")
+                                         .list(connection);
         assertThat("selection", selection, contains(
                 lineWithItemNumber("00000003"),
                 lineWithItemNumber("00000002"),

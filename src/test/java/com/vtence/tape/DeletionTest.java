@@ -39,12 +39,14 @@ public class DeletionTest {
 
         transactor.perform(new UnitOfWork() {
             public void execute() {
-                int deleted = Delete.from(products).execute(connection);
+                int deleted = Delete.from(products)
+                                    .execute(connection);
                 assertThat("records deleted", deleted, is(3));
             }
         });
 
-        List<Product> records = Select.from(products).list(connection);
+        List<Product> records = Select.from(products)
+                                      .list(connection);
         assertThat("existing records", records, empty());
     }
 
@@ -56,12 +58,15 @@ public class DeletionTest {
 
         transactor.perform(new UnitOfWork() {
             public void execute() {
-                int deleted = Delete.from(products).where("number = ?", "12345678").execute(connection);
+                int deleted = Delete.from(products)
+                                    .where("number = ?", "12345678")
+                                    .execute(connection);
                 assertThat("records deleted", deleted, is(1));
             }
         });
 
-        List<Product> records = Select.from(products).list(connection);
+        List<Product> records = Select.from(products)
+                                      .list(connection);
         assertThat("existing records", records, hasSize(2));
         assertThat("existing records", records, containsInAnyOrder(productNamed("Labrador Retriever"), productNamed("Dalmatian")));
     }

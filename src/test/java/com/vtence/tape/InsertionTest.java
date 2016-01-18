@@ -38,12 +38,14 @@ public class InsertionTest {
 
         transactor.perform(new UnitOfWork() {
             public void execute() {
-                int inserted = Insert.into(products, original).execute(connection);
+                int inserted = Insert.into(products, original)
+                                     .execute(connection);
                 assertThat("records inserted", inserted, is(1));
             }
         });
 
-        Product record = Select.from(products).first(connection);
+        Product record = Select.from(products)
+                               .first(connection);
         assertThat("inserted record", record, samePropertyValuesAs(original));
     }
 
@@ -54,7 +56,8 @@ public class InsertionTest {
 
         transactor.perform(new UnitOfWork() {
             public void execute() {
-                Insert.into(products, entity).execute(connection);
+                Insert.into(products, entity)
+                      .execute(connection);
             }
         });
 
