@@ -12,14 +12,14 @@ public class Select<T> {
 
     private final Table<? extends T> from;
     private final SelectStatement statement;
-    private final List<Object> parameters = new ArrayList<Object>();
+    private final List<Object> parameters = new ArrayList<>();
 
     public static <T> Select<T> from(final Table<? extends T> table) {
-        return new Select<T>(table);
+        return new Select<>(table);
     }
 
     public static <T> Select<T> from(final Table<? extends T> table, String alias) {
-        return new Select<T>(table, alias);
+        return new Select<>(table, alias);
     }
 
     public Select(Table<? extends T> from) {
@@ -79,10 +79,8 @@ public class Select<T> {
     }
 
     public List<T> list(final Connection connection) {
-        List<T> entities = new ArrayList<T>();
-        PreparedStatement query = null;
-        try {
-            query = connection.prepareStatement(statement.toSql());
+        List<T> entities = new ArrayList<>();
+        try (PreparedStatement query = connection.prepareStatement(statement.toSql())) {
             for (int index = 0; index < parameters.size(); index++) {
                 JDBC.setParameter(query, index + 1, parameters.get(index));
             }
@@ -92,9 +90,8 @@ public class Select<T> {
             }
         } catch (SQLException e) {
             throw new JDBCException("Could not execute query", e);
-        } finally {
-            JDBC.close(query);
         }
+
         return entities;
     }
 

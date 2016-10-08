@@ -8,7 +8,7 @@ public class Orders {
 
     public static Matcher<Order> orderWithNumber(Matcher<? super String> orderNumber) {
         return new FeatureMatcher<Order, String>(orderNumber, "an order with number", "order number") {
-            @Override protected String featureValueOf(Order order) {
+            protected String featureValueOf(Order order) {
                 return order.getNumber();
             }
         };

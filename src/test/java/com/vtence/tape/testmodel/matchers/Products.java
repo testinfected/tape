@@ -10,7 +10,7 @@ public class Products {
 
     public static Matcher<? super Product> productNamed(String name) {
         return new FeatureMatcher<Product, String>(equalTo(name), "a product with name", "name") {
-            @Override protected String featureValueOf(Product actual) {
+            protected String featureValueOf(Product actual) {
                 return actual.getName();
             }
         };
@@ -18,7 +18,7 @@ public class Products {
 
     public static Matcher<? super Product> productWithNumber(String number) {
         return new FeatureMatcher<Product, String>(equalTo(number), "a product with number", "number") {
-            @Override protected String featureValueOf(Product actual) {
+            protected String featureValueOf(Product actual) {
                 return actual.getNumber();
             }
         };

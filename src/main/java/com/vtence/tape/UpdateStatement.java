@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UpdateStatement {
     private final String table;
-    private final List<String> columns = new ArrayList<String>();
+    private final List<String> columns = new ArrayList<>();
     private final StringBuilder whereClause = new StringBuilder();
 
     public UpdateStatement(String table, String... columns) {

@@ -12,10 +12,10 @@ public class Update<T> {
     private final Table<? super T> set;
     private final T entity;
     private final UpdateStatement statement;
-    private final List<Object> parameters = new ArrayList<Object>();
+    private final List<Object> parameters = new ArrayList<>();
 
     public static <T> Update<T> set(Table<? super T> table, T entity) {
-        return new Update<T>(table, entity);
+        return new Update<>(table, entity);
     }
 
     public Update(Table<? super T> table, T entity) {
@@ -31,9 +31,7 @@ public class Update<T> {
     }
 
     public int execute(Connection connection) {
-        PreparedStatement update = null;
-        try {
-            update = connection.prepareStatement(statement.toSql());
+        try( PreparedStatement update = connection.prepareStatement(statement.toSql())) {
             set.dehydrate(update, entity);
             for (int i = 0; i < parameters.size(); i++) {
                 JDBC.setParameter(update, parameterIndex(i), parameters.get(i));
@@ -41,8 +39,6 @@ public class Update<T> {
             return update.executeUpdate();
         } catch (SQLException e) {
             throw new JDBCException("Could not update entity " + entity, e);
-        } finally {
-            JDBC.close(update);
         }
     }
 

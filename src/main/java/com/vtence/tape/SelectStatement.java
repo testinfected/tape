@@ -12,9 +12,9 @@ import static java.util.Arrays.asList;
 public class SelectStatement {
 
     private final String table;
-    private final Map<String, List<String>> columns = new HashMap<String, List<String>>();
-    private final Map<String, String> aliases = new HashMap<String, String>();
-    private final List<String> joinTables = new ArrayList<String>();
+    private final Map<String, List<String>> columns = new HashMap<>();
+    private final Map<String, String> aliases = new HashMap<>();
+    private final List<String> joinTables = new ArrayList<>();
     private final StringBuilder joinClause = new StringBuilder();
     private final StringBuilder whereClause = new StringBuilder();
     private final StringBuilder orderByClause = new StringBuilder();
@@ -96,7 +96,7 @@ public class SelectStatement {
     }
 
     private Collection<String> listColumns() {
-        Collection<String> columnNames = new ArrayList<String>();
+        Collection<String> columnNames = new ArrayList<>();
         columnNames.addAll(qualifiedColumnNamesOf(table));
         for (String joinTable : joinTables) {
             columnNames.addAll(qualifiedColumnNamesOf(joinTable));
@@ -105,7 +105,7 @@ public class SelectStatement {
     }
 
     private List<String> qualifiedColumnNamesOf(String tableName) {
-        List<String> qualifiedColumnNames = new ArrayList<String>();
+        List<String> qualifiedColumnNames = new ArrayList<>();
         for (String column : columnsOf(tableName)) {
             qualifiedColumnNames.add(aliased(tableName) ? aliasOf(tableName) + "." + column : column);
         }

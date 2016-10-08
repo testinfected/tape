@@ -41,11 +41,8 @@ public class DriverManagerDataSourceTest {
 
     @Test public void
     doesNotReuseConnections() throws SQLException {
-        Connection other = connectionSource.getConnection();
-        try {
+        try (Connection other = connectionSource.getConnection()) {
             assertThat("other connection", other, not(sameInstance(connection)));
-        } finally {
-            other.close();
         }
     }
 
@@ -57,12 +54,9 @@ public class DriverManagerDataSourceTest {
     @Test public void
     setsAutoCommit() throws SQLException {
         connectionSource.setAutoCommit(false);
-        Connection connection = connectionSource.getConnection();
 
-        try {
+        try (Connection connection = connectionSource.getConnection()) {
             assertThat("auto commit", connection.getAutoCommit(), is(equalTo(false)));
-        } finally {
-            connection.close();
         }
     }
 }

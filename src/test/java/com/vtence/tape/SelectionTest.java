@@ -220,7 +220,8 @@ public class SelectionTest {
                 lineWithItemNumber("00000001")));
     }
 
-    private <T> void persist(final Builder<T>... builders) {
+    @SafeVarargs
+    private final <T> void persist(final Builder<T>... builders) {
         for (final Builder<T> builder : builders) {
             persist(builder);
         }
@@ -241,7 +242,7 @@ public class SelectionTest {
 
     @SuppressWarnings("unchecked")
     private <T> Table<T> tableFor(T entity) {
-        Map<Class, Table> tables = new HashMap<Class, Table>();
+        Map<Class, Table> tables = new HashMap<>();
         tables.put(Item.class, items);
         tables.put(Product.class, products);
         tables.put(CreditCardDetails.class, payments);

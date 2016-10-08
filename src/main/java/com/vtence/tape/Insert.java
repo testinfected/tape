@@ -12,7 +12,7 @@ public class Insert<T> {
     private final InsertStatement statement;
 
     public static <T> Insert<T> into(Table<? super T> table, T entity) {
-        return new Insert<T>(table, entity);
+        return new Insert<>(table, entity);
     }
 
     public Insert(Table<? super T> table, final T entity) {
@@ -22,17 +22,13 @@ public class Insert<T> {
     }
 
     public int execute(final Connection connection) {
-        PreparedStatement insert = null;
-        try {
-            insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS);
+        try (PreparedStatement insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS)) {
             into.dehydrate(insert, entity);
             int rowsInserted = insert.executeUpdate();
             into.handleKeys(insert.getGeneratedKeys(), entity);
             return rowsInserted;
         } catch (SQLException e) {
             throw new JDBCException("Could not insert entity " + entity, e);
-        } finally {
-            JDBC.close(insert);
         }
     }
 }

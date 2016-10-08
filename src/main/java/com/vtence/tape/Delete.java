@@ -10,10 +10,10 @@ import java.util.List;
 public class Delete<T> {
 
     private final DeleteStatement statement;
-    private final List<Object> parameters = new ArrayList<Object>();
+    private final List<Object> parameters = new ArrayList<>();
 
     public static <T> Delete<T> from(Table<T> table) {
-        return new Delete<T>(table);
+        return new Delete<>(table);
     }
 
     public Delete(Table<T> from) {
@@ -27,17 +27,13 @@ public class Delete<T> {
     }
 
     public int execute(Connection connection) {
-        PreparedStatement delete = null;
-        try {
-            delete = connection.prepareStatement(statement.toSql());
+        try (PreparedStatement delete = connection.prepareStatement(statement.toSql())) {
             for (int i = 0; i < parameters.size(); i++) {
                 JDBC.setParameter(delete, i + 1, parameters.get(i));
             }
             return delete.executeUpdate();
         } catch (SQLException e) {
             throw new JDBCException("Could not execute delete", e);
-        } finally {
-            JDBC.close(delete);
         }
     }
 }

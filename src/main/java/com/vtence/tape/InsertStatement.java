@@ -7,7 +7,7 @@ import java.util.List;
 
 public class InsertStatement {
     private final String table;
-    private final List<String> columns = new ArrayList<String>();
+    private final List<String> columns = new ArrayList<>();
 
     public InsertStatement(String table, String... columns) {
         this(table, Arrays.asList(columns));
@@ -36,7 +36,7 @@ public class InsertStatement {
     }
 
     private List<String> parametersFor(final Iterable<String> columns) {
-        List<String> parameters = new ArrayList<String>();
+        List<String> parameters = new ArrayList<>();
         for (String ignored : columns){
             parameters.add("?");
         }

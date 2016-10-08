@@ -7,7 +7,7 @@ import java.util.List;
 public class Order extends Entity {
 
     private final OrderNumber number;
-    private final List<LineItem> lines = new ArrayList<LineItem>();
+    private final List<LineItem> lines = new ArrayList<>();
 
     private PaymentMethod paymentMethod;
 

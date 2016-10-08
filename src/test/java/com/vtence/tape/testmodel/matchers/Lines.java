@@ -10,7 +10,7 @@ public class Lines {
 
     public static Matcher<LineItem> lineWithItemNumber(String itemNumber) {
         return new FeatureMatcher<LineItem, String>(equalTo(itemNumber), "an order line for item", "item") {
-            @Override protected String featureValueOf(LineItem line) {
+            protected String featureValueOf(LineItem line) {
                 return line.getItemNumber();
             }
         };

@@ -41,7 +41,6 @@ public abstract class AbstractDataSource implements DataSource {
         return DataSource.class.equals(iface);
     }
 
-    // This is for compatibility with JDK 1.7
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException("This data source does not use logging");
     }

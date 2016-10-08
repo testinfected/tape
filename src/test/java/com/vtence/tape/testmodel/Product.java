@@ -32,7 +32,6 @@ public class Product extends Entity {
         this.description = description;
     }
 
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -44,12 +43,10 @@ public class Product extends Entity {
         return true;
     }
 
-    @Override
     public int hashCode() {
         return number != null ? number.hashCode() : 0;
     }
 
-    @Override
     public String toString() {
         return number + " (" + name + ")";
     }

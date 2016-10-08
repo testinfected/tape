@@ -7,7 +7,7 @@ public class FieldAccessor<T>  {
     public static <T> FieldAccessor<T> access(Object entity, String fieldName) {
         Field field = find(entity, fieldName);
         if (field == null) throw new IllegalArgumentException(entity.getClass().getName() + " has no field '" + fieldName + "'");
-        return new FieldAccessor<T>(entity, field);
+        return new FieldAccessor<>(entity, field);
     }
 
     public static Field find(Object object, final String name) {

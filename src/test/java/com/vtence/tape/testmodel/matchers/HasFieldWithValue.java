@@ -17,7 +17,6 @@ public class HasFieldWithValue<T, U> extends TypeSafeDiagnosingMatcher<T> {
         this.valueMatcher = valueMatcher;
     }
 
-    @Override
     protected boolean matchesSafely(T argument, Description mismatchDescription) {
         Field field = FieldAccessor.find(argument, fieldName);
         if (field == null) {
@@ -25,7 +24,7 @@ public class HasFieldWithValue<T, U> extends TypeSafeDiagnosingMatcher<T> {
             return false;
         }
 
-        Object fieldValue = new FieldAccessor<Object>(argument, field).get();
+        Object fieldValue = new FieldAccessor<>(argument, field).get();
         boolean valueMatches = valueMatcher.matches(fieldValue);
         if (!valueMatches) {
             mismatchDescription.appendText("\"" + fieldName + "\" ");
@@ -42,6 +41,6 @@ public class HasFieldWithValue<T, U> extends TypeSafeDiagnosingMatcher<T> {
     }
 
     public static <T, U> Matcher<T> hasField(String field, Matcher<? super U> value) {
-        return new HasFieldWithValue<T, U>(field, value);
+        return new HasFieldWithValue<>(field, value);
     }
 }
