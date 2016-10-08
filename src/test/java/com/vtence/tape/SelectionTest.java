@@ -10,8 +10,8 @@ import com.vtence.tape.testmodel.Order;
 import com.vtence.tape.testmodel.PaymentMethod;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
+import com.vtence.tape.testmodel.matchers.Products;
 import com.vtence.tape.testmodel.records.Schema;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Test;
 
@@ -29,12 +29,10 @@ import static com.vtence.tape.testmodel.builders.ItemBuilder.a;
 import static com.vtence.tape.testmodel.builders.ItemBuilder.anItem;
 import static com.vtence.tape.testmodel.builders.OrderBuilder.anOrder;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
-import static com.vtence.tape.testmodel.matchers.HasFieldWithValue.hasField;
 import static com.vtence.tape.testmodel.matchers.Items.itemWithProductNumber;
 import static com.vtence.tape.testmodel.matchers.Lines.lineWithItemNumber;
 import static com.vtence.tape.testmodel.matchers.Orders.orderWithNumber;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -43,7 +41,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 public class SelectionTest {
 
@@ -70,7 +67,7 @@ public class SelectionTest {
         Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
 
         Product record = Select.from(products).first(connection);
-        assertThat("record", record, sameProductAs(original));
+        assertThat("record", record, Products.sameProductAs(original));
     }
 
     @SuppressWarnings("unchecked")
@@ -249,9 +246,5 @@ public class SelectionTest {
         tables.put(Order.class, orders);
         tables.put(LineItem.class, lineItems);
         return (Table<T>) tables.get(entity.getClass());
-    }
-
-    private Matcher<Product> sameProductAs(Product original) {
-        return allOf(hasField("id", equalTo(idOf(original).get())), samePropertyValuesAs(original));
     }
 }
