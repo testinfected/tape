@@ -14,9 +14,6 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 - `JDBCException` can wrap an `SQLException` without an accompanying message
 - Selects use table name to fully qualify column names by default ([#2])
 
-### Fixed
-- Eliminate superfluous space character in element manipulation description
-
 ## [0.2] - 2015-09-03
 
 ### Added
@@ -27,7 +24,7 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 - Test jar is not longer published 
 
 ### Fixed
-- Deletes and updates no longer declare throwing SQLException
+- Deletes and updates no longer declare throwing `SQLException`
 
 ## 0.1 - 2013-01-26
 
