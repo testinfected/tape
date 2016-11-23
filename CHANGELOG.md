@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.1] - 2016-11-23
+
+### Changed
+- Better error reporting when attempting to insert/update an auto-generated column ([#3])
+
 ## [0.3.0] - 2016-10-21
 
 ### Added
@@ -31,8 +36,10 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 Initial public release
 
 
+[0.3.1]: https://github.com/testinfected/tape/compare/v0.3.1...v0.3.0
 [0.3.0]: https://github.com/testinfected/tape/compare/v0.3.0...v0.2
 [0.2]: https://github.com/testinfected/tape/compare/v0.2...v0.1
 
 [#1]: https://github.com/testinfected/tape/issues/1
 [#2]: https://github.com/testinfected/tape/issues/2
+[#3]: https://github.com/testinfected/tape/issues/3
