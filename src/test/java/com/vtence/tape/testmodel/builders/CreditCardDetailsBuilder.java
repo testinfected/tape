@@ -3,18 +3,11 @@ package com.vtence.tape.testmodel.builders;
 import com.vtence.tape.testmodel.CreditCardDetails;
 import com.vtence.tape.testmodel.CreditCardType;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class CreditCardDetailsBuilder implements Builder<CreditCardDetails> {
-
-    public final DateFormat expiryDateFormat = new SimpleDateFormat("MM/yy");
 
     private CreditCardType cardType = CreditCardType.visa;
     private String cardNumber;
-    private Date cardExpiryDate;
+    private String cardExpiryDate;
     private int cardVerificationCode;
 
     public static CreditCardDetailsBuilder aVisa() {
@@ -35,11 +28,7 @@ public class CreditCardDetailsBuilder implements Builder<CreditCardDetails> {
         return this;
     }
 
-    public CreditCardDetailsBuilder withExpiryDate(String date) throws ParseException {
-        return withExpiryDate(expiryDateFormat.parse(date));
-    }
-
-    public CreditCardDetailsBuilder withExpiryDate(Date cardExpiryDate) {
+    public CreditCardDetailsBuilder withExpiryDate(String cardExpiryDate) {
         this.cardExpiryDate = cardExpiryDate;
         return this;
     }

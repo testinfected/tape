@@ -16,6 +16,7 @@ public class OrderBuilder implements Builder<Order> {
     private OrderNumber orderNumber = new OrderNumber(FakeNumber.aNumber());
     private final List<Item> items = new ArrayList<Item>();
     private PaymentMethod paymentMethod;
+    private Date shippingDate;
     private Date shippingTime;
 
     public static OrderBuilder anOrder() {
@@ -52,6 +53,11 @@ public class OrderBuilder implements Builder<Order> {
         return this;
     }
 
+    public OrderBuilder shippedOn(Date date) {
+        shippingDate = date;
+        return this;
+    }
+
     public OrderBuilder shippedAt(Date time) {
         this.shippingTime = time;
         return this;
@@ -63,6 +69,7 @@ public class OrderBuilder implements Builder<Order> {
             order.addItem(item);
         }
         order.paidUsing(paymentMethod);
+        order.setShippingDate(shippingDate);
         order.setShippingTime(shippingTime);
         return order;
     }

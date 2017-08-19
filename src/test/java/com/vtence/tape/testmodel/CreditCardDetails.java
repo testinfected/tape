@@ -1,15 +1,13 @@
 package com.vtence.tape.testmodel;
 
-import java.util.Date;
-
 public class CreditCardDetails extends PaymentMethod {
 
     private final CreditCardType cardType;
     private final String cardNumber;
-    private final Date cardExpiryDate;
+    private final String cardExpiryDate;
     private final int cardVerificationCode;
 
-    public CreditCardDetails(CreditCardType cardType, String cardNumber, Date cardExpiryDate, int cardVerificationCode) {
+    public CreditCardDetails(CreditCardType cardType, String cardNumber, String cardExpiryDate, int cardVerificationCode) {
         this.cardType = cardType;
         this.cardNumber = cardNumber;
         this.cardExpiryDate = cardExpiryDate;
@@ -28,7 +26,7 @@ public class CreditCardDetails extends PaymentMethod {
         return cardNumber;
     }
 
-    public Date getCardExpiryDate() {
+    public String getCardExpiryDate() {
         return cardExpiryDate;
     }
 

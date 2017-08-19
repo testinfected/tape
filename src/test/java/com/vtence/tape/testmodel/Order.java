@@ -11,6 +11,7 @@ public class Order extends Entity {
     private final List<LineItem> lines = new ArrayList<>();
 
     private PaymentMethod paymentMethod;
+    private Date shippingDate;
     private Date shippingTime;
 
     public Order(OrderNumber number) {
@@ -43,6 +44,14 @@ public class Order extends Entity {
 
     public boolean isPaid() {
         return paymentMethod != null;
+    }
+
+    public Date getShippingDate() {
+        return shippingDate;
+    }
+
+    public void setShippingDate(Date date) {
+        this.shippingDate = date;
     }
 
     public Date getShippingTime() {

@@ -20,7 +20,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.text.ParseException;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.CreditCardDetailsBuilder.aCreditCard;
@@ -94,13 +93,12 @@ public class DataTypesTest {
      * in the {@link Record} implementation.
      */
     @Test public void
-    usingDateColumns() throws ParseException {
-        // We store expiry dates in database as UTC (see schema)
-        CreditCardDetails card = roundTrip(aCreditCard().withExpiryDate(
-                calendarDate(2018, 3, 1).inZone("UTC").build()));
+    usingDateColumns() {
+        // We store shipping dates in database as UTC (see schema)
+        Order order = roundTrip(anOrder().shippedOn(calendarDate(2017, 8, 5).inZone("UTC").build()));
 
-        assertThat("expiry date", card.getCardExpiryDate(), equalTo(
-                calendarDate(2018, 3, 1).inZone("UTC").build()));
+        assertThat("shipping date", order.getShippingDate(), equalTo(
+                calendarDate(2017, 8, 5).inZone("UTC").build()));
     }
 
     /**
@@ -114,7 +112,7 @@ public class DataTypesTest {
      * in the {@link Record} implementation.
      */
     @Test public void
-    usingTimeColumns() throws ParseException {
+    usingTimeColumns() {
         // The date is not important here, but JDBC uses January 1, 1970 as the date
         DateBuilder someDate = calendarDate(1970, 1, 1);
 
