@@ -10,11 +10,12 @@ import java.util.Date;
 
 public class CreditCardDetailsBuilder implements Builder<CreditCardDetails> {
 
-    private final DateFormat expiryDateFormat = new SimpleDateFormat("mm/yy");
+    public final DateFormat expiryDateFormat = new SimpleDateFormat("MM/yy");
 
     private CreditCardType cardType = CreditCardType.visa;
     private String cardNumber;
     private Date cardExpiryDate;
+    private int cardVerificationCode;
 
     public static CreditCardDetailsBuilder aVisa() {
         return aCreditCard().ofType(CreditCardType.visa);
@@ -43,7 +44,12 @@ public class CreditCardDetailsBuilder implements Builder<CreditCardDetails> {
         return this;
     }
 
+    public CreditCardDetailsBuilder withCardVerificationCode(int cardVerificationCode) {
+        this.cardVerificationCode = cardVerificationCode;
+        return this;
+    }
+
     public CreditCardDetails build() {
-        return new CreditCardDetails(cardType, cardNumber, cardExpiryDate);
+        return new CreditCardDetails(cardType, cardNumber, cardExpiryDate, cardVerificationCode);
     }
 }

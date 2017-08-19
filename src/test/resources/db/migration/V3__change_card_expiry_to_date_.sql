@@ -1,0 +1,1 @@
+ALTER TABLE payments ALTER COLUMN card_expiry_date DATE;

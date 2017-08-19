@@ -18,6 +18,10 @@ public class Item extends Entity {
         return number;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public String getProductNumber() {
         return product.getNumber();
     }

@@ -1,8 +1,6 @@
 package com.vtence.tape.testmodel;
 
-import java.io.Serializable;
-
-public abstract class Entity implements Serializable {
+public abstract class Entity {
 
     @SuppressWarnings("unused")
     private Long id;

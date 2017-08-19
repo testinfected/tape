@@ -1,0 +1,1 @@
+ALTER TABLE payments ADD card_verification_code INT;

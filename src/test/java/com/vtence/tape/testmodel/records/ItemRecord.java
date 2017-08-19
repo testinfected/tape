@@ -40,7 +40,7 @@ public class ItemRecord extends AbstractRecord<Item> {
 
     public void dehydrate(PreparedStatement st, Item item) throws SQLException {
         number.set(st, item.getNumber());
-        product.set(st, Access.idOf(Access.productOf(item).get()).get());
+        product.set(st, Access.idOf(item.getProduct()).get());
         price.set(st, item.getPrice());
     }
 }

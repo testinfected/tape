@@ -8,10 +8,6 @@ public class Access {
         return FieldAccessor.access(entity, "id");
     }
 
-    public static FieldAccessor<Product> productOf(Object entity) {
-        return FieldAccessor.access(entity, "product");
-    }
-
     public static FieldAccessor<Order> orderOf(Object entity) {
         return FieldAccessor.access(entity, "order");
     }

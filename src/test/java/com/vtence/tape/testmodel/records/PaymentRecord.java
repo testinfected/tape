@@ -1,6 +1,7 @@
 package com.vtence.tape.testmodel.records;
 
 import com.vtence.tape.Column;
+import com.vtence.tape.JDBC;
 import com.vtence.tape.testmodel.CreditCardDetails;
 import com.vtence.tape.testmodel.CreditCardType;
 import com.vtence.tape.testmodel.PaymentMethod;
@@ -19,6 +20,7 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
     private final Column<String> cardType;
     private final Column<String> cardNumber;
     private final Column<Date> cardExpiryDate;
+    private final Column<Integer> cardVerificationCode;
 
     public static final String CREDIT_CARD = "credit_card";
 
@@ -26,19 +28,22 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
                          Column<String> paymentType,
                          Column<String> cardType,
                          Column<String> cardNumber,
-                         Column<Date> cardExpiryDate) {
+                         Column<Date> cardExpiryDate,
+                         Column<Integer> cardVerificationCode) {
         this.id = id;
         this.paymentType = paymentType;
         this.cardType = cardType;
         this.cardNumber = cardNumber;
         this.cardExpiryDate = cardExpiryDate;
+        this.cardVerificationCode = cardVerificationCode;
     }
 
     public CreditCardDetails hydrate(ResultSet rs) throws SQLException {
         if (!paymentType.get(rs).equals(CREDIT_CARD)) throw new IllegalArgumentException("payment of type " + paymentType.get(rs));
 
         CreditCardDetails creditCard = new CreditCardDetails(
-                CreditCardType.valueOf(cardType.get(rs)), cardNumber.get(rs), cardExpiryDate.get(rs));
+                CreditCardType.valueOf(cardType.get(rs)), cardNumber.get(rs), JDBC.fromSQLDate(cardExpiryDate.get(rs)),
+                cardVerificationCode.get(rs));
         idOf(creditCard).set(id.get(rs));
         return creditCard;
     }
@@ -47,7 +52,9 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
         CreditCardDetails creditCard = (CreditCardDetails) payment;
         cardType.set(st, creditCard.getCardType().name());
         cardNumber.set(st, creditCard.getCardNumber());
-        cardExpiryDate.set(st, new Date(creditCard.getCardExpiryDate().getTime()));
+        cardExpiryDate.set(st, JDBC.toSQLDate(creditCard.getCardExpiryDate()));
+        cardVerificationCode.set(st, creditCard.getCardVerificationCode());
         paymentType.set(st, CREDIT_CARD);
     }
+
 }

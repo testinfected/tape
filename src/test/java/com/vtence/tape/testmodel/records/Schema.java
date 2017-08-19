@@ -8,6 +8,8 @@ import com.vtence.tape.testmodel.Order;
 import com.vtence.tape.testmodel.PaymentMethod;
 import com.vtence.tape.testmodel.Product;
 
+import java.util.TimeZone;
+
 public class Schema {
 
     private Schema() {}
@@ -38,7 +40,8 @@ public class Schema {
                 schema.STRING("payment_type"),
                 schema.STRING("card_type"),
                 schema.STRING("card_number"),
-                schema.DATE("card_expiry_date")));
+                schema.DATE("card_expiry_date", TimeZone.getTimeZone("UTC")),
+                schema.INT("card_verification_code")));
     }
 
     public static Table<Order> ordersWith(Table<PaymentMethod> payments) {
