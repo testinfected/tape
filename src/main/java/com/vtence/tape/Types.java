@@ -1,9 +1,12 @@
 package com.vtence.tape;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public final class Types {
 
@@ -52,4 +55,19 @@ public final class Types {
                 statement.setNull(index, java.sql.Types.INTEGER);
         }
     };
+
+    public static Column.Type<Date> dateIn(final TimeZone timeZone) {
+        return new Column.Type<Date>() {
+            public Date get(ResultSet rs, int index) throws SQLException {
+                return rs.getDate(index, Calendar.getInstance(timeZone));
+            }
+
+            public void set(PreparedStatement statement, int index, Date value) throws SQLException {
+                if (value != null) {
+                    statement.setDate(index, value, Calendar.getInstance(timeZone));
+                } else
+                    statement.setNull(index, java.sql.Types.DATE);
+            }
+        };
+    }
 }

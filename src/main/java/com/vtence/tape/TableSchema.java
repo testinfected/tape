@@ -1,8 +1,10 @@
 package com.vtence.tape;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class TableSchema {
 
@@ -31,6 +33,14 @@ public class TableSchema {
 
     public Column<Integer> INT(String name) {
         return add(new Column<>(this, name, Types.INT));
+    }
+
+    public Column<Date> DATE(String name) {
+        return DATE(name, TimeZone.getDefault());
+    }
+
+    public Column<Date> DATE(String name, TimeZone timeZone) {
+        return add(new Column<>(this, name, Types.dateIn(timeZone)));
     }
 
     public <T> Column<T> add(Column<T> column) {

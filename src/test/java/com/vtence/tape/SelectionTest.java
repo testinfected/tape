@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -165,7 +166,7 @@ public class SelectionTest {
     @SuppressWarnings("unchecked")
     @Test
     public void
-    queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() {
+    queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() throws ParseException {
         persist(
                 anOrder().withNumber("00000001"),
                 anOrder().withNumber("10000001"),
@@ -183,7 +184,7 @@ public class SelectionTest {
     @SuppressWarnings("unchecked")
     @Test
     public void
-    usingAliasesWithLeftJoins() {
+    usingAliasesWithLeftJoins() throws ParseException {
         persist(anOrder().withNumber("10000002")
                          .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
 

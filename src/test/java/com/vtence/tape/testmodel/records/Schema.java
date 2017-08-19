@@ -38,7 +38,7 @@ public class Schema {
                 schema.STRING("payment_type"),
                 schema.STRING("card_type"),
                 schema.STRING("card_number"),
-                schema.STRING("card_expiry_date")));
+                schema.DATE("card_expiry_date")));
     }
 
     public static Table<Order> ordersWith(Table<PaymentMethod> payments) {

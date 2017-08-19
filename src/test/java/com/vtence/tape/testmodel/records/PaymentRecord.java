@@ -5,6 +5,7 @@ import com.vtence.tape.testmodel.CreditCardDetails;
 import com.vtence.tape.testmodel.CreditCardType;
 import com.vtence.tape.testmodel.PaymentMethod;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
     private final Column<String> paymentType;
     private final Column<String> cardType;
     private final Column<String> cardNumber;
-    private final Column<String> cardExpiryDate;
+    private final Column<Date> cardExpiryDate;
 
     public static final String CREDIT_CARD = "credit_card";
 
@@ -25,7 +26,7 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
                          Column<String> paymentType,
                          Column<String> cardType,
                          Column<String> cardNumber,
-                         Column<String> cardExpiryDate) {
+                         Column<Date> cardExpiryDate) {
         this.id = id;
         this.paymentType = paymentType;
         this.cardType = cardType;
@@ -46,7 +47,7 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
         CreditCardDetails creditCard = (CreditCardDetails) payment;
         cardType.set(st, creditCard.getCardType().name());
         cardNumber.set(st, creditCard.getCardNumber());
-        cardExpiryDate.set(st, creditCard.getCardExpiryDate());
+        cardExpiryDate.set(st, new Date(creditCard.getCardExpiryDate().getTime()));
         paymentType.set(st, CREDIT_CARD);
     }
 }
