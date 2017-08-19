@@ -2,6 +2,7 @@ package com.vtence.tape;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -41,6 +42,14 @@ public class TableSchema {
 
     public Column<Date> DATE(String name, TimeZone timeZone) {
         return add(new Column<>(this, name, Types.dateIn(timeZone)));
+    }
+
+    public Column<Time> TIME(String name) {
+        return TIME(name, TimeZone.getDefault());
+    }
+
+    public Column<Time> TIME(String name, TimeZone timeZone) {
+        return add(new Column<>(this, name, Types.timeIn(timeZone)));
     }
 
     public <T> Column<T> add(Column<T> column) {

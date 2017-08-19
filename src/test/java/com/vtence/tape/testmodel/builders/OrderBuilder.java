@@ -6,6 +6,7 @@ import com.vtence.tape.testmodel.OrderNumber;
 import com.vtence.tape.testmodel.PaymentMethod;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -15,6 +16,7 @@ public class OrderBuilder implements Builder<Order> {
     private OrderNumber orderNumber = new OrderNumber(FakeNumber.aNumber());
     private final List<Item> items = new ArrayList<Item>();
     private PaymentMethod paymentMethod;
+    private Date shippingTime;
 
     public static OrderBuilder anOrder() {
         return new OrderBuilder();
@@ -50,12 +52,18 @@ public class OrderBuilder implements Builder<Order> {
         return this;
     }
 
+    public OrderBuilder shippedAt(Date time) {
+        this.shippingTime = time;
+        return this;
+    }
+
     public Order build() {
         Order order = new Order(orderNumber);
         for (Item item : items) {
             order.addItem(item);
         }
         order.paidUsing(paymentMethod);
+        order.setShippingTime(shippingTime);
         return order;
     }
 }

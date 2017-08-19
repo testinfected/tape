@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -55,6 +56,7 @@ public final class Types {
                 statement.setNull(index, java.sql.Types.INTEGER);
         }
     };
+    private static TimeZone timeZone;
 
     public static Column.Type<Date> dateIn(final TimeZone timeZone) {
         return new Column.Type<Date>() {
@@ -63,10 +65,25 @@ public final class Types {
             }
 
             public void set(PreparedStatement statement, int index, Date value) throws SQLException {
-                if (value != null) {
+                if (value != null)
                     statement.setDate(index, value, Calendar.getInstance(timeZone));
-                } else
+                 else
                     statement.setNull(index, java.sql.Types.DATE);
+            }
+        };
+    }
+
+    public static Column.Type<Time> timeIn(final TimeZone timeZone) {
+        return new Column.Type<Time>() {
+            public Time get(ResultSet rs, int index) throws SQLException {
+                return rs.getTime(index, Calendar.getInstance(timeZone));
+            }
+
+            public void set(PreparedStatement statement, int index, Time value) throws SQLException {
+                if (value != null)
+                    statement.setTime(index, value, Calendar.getInstance(timeZone));
+                else
+                    statement.setNull(index, java.sql.Types.TIME);
             }
         };
     }

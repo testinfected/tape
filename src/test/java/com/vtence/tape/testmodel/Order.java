@@ -2,6 +2,7 @@ package com.vtence.tape.testmodel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class Order extends Entity {
@@ -10,6 +11,7 @@ public class Order extends Entity {
     private final List<LineItem> lines = new ArrayList<>();
 
     private PaymentMethod paymentMethod;
+    private Date shippingTime;
 
     public Order(OrderNumber number) {
         this.number = number;
@@ -41,6 +43,14 @@ public class Order extends Entity {
 
     public boolean isPaid() {
         return paymentMethod != null;
+    }
+
+    public Date getShippingTime() {
+        return shippingTime;
+    }
+
+    public void setShippingTime(Date time) {
+        this.shippingTime = time;
     }
 
     public int getLineItemCount() {

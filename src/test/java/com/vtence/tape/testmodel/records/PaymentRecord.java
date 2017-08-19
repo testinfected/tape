@@ -42,7 +42,7 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
         if (!paymentType.get(rs).equals(CREDIT_CARD)) throw new IllegalArgumentException("payment of type " + paymentType.get(rs));
 
         CreditCardDetails creditCard = new CreditCardDetails(
-                CreditCardType.valueOf(cardType.get(rs)), cardNumber.get(rs), JDBC.fromSQLDate(cardExpiryDate.get(rs)),
+                CreditCardType.valueOf(cardType.get(rs)), cardNumber.get(rs), JDBC.toJavaDate(cardExpiryDate.get(rs)),
                 cardVerificationCode.get(rs));
         idOf(creditCard).set(id.get(rs));
         return creditCard;
