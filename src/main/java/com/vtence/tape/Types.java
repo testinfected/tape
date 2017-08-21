@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -84,6 +85,21 @@ public final class Types {
                     statement.setTime(index, value, Calendar.getInstance(timeZone));
                 else
                     statement.setNull(index, java.sql.Types.TIME);
+            }
+        };
+    }
+
+    public static Column.Type<Timestamp> timestampIn(final TimeZone timeZone) {
+        return new Column.Type<Timestamp>() {
+            public Timestamp get(ResultSet rs, int index) throws SQLException {
+                return rs.getTimestamp(index, Calendar.getInstance(timeZone));
+            }
+
+            public void set(PreparedStatement statement, int index, Timestamp value) throws SQLException {
+                if (value != null)
+                    statement.setTimestamp(index, value, Calendar.getInstance(timeZone));
+                else
+                    statement.setNull(index, java.sql.Types.TIMESTAMP);
             }
         };
     }

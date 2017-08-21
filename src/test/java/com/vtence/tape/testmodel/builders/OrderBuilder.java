@@ -18,6 +18,7 @@ public class OrderBuilder implements Builder<Order> {
     private PaymentMethod paymentMethod;
     private Date shippingDate;
     private Date shippingTime;
+    private Date orderedAt;
 
     public static OrderBuilder anOrder() {
         return new OrderBuilder();
@@ -63,6 +64,11 @@ public class OrderBuilder implements Builder<Order> {
         return this;
     }
 
+    public OrderBuilder orderedAt(Date instant) {
+        this.orderedAt = instant;
+        return this;
+    }
+
     public Order build() {
         Order order = new Order(orderNumber);
         for (Item item : items) {
@@ -71,6 +77,7 @@ public class OrderBuilder implements Builder<Order> {
         order.paidUsing(paymentMethod);
         order.setShippingDate(shippingDate);
         order.setShippingTime(shippingTime);
+        order.setOrderedAt(orderedAt);
         return order;
     }
 }

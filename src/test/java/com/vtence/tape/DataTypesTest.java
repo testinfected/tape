@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Date;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.CreditCardDetailsBuilder.aCreditCard;
@@ -76,7 +77,7 @@ public class DataTypesTest {
     }
 
     @Test public void
-    decimals() {
+    usingDecimalColumns() {
         Item item = roundTrip(anItem().of(aProduct()).priced(new BigDecimal("649.99")));
 
         assertThat("price", item.getPrice(), equalTo(new BigDecimal("649.99")));
@@ -121,6 +122,28 @@ public class DataTypesTest {
 
         assertThat("shipping time", order.getShippingTime(), equalTo(
                 someDate.atTime(15, 32, 45).inZone("UTC").build()));
+    }
+
+    /**
+     * Same goes with timestamps. Convert the <code>Timestamp</code> to the timezone of
+     * the column definition. Depending on the schema, the database column might or might not store timezone
+     * information.
+     *
+     * The test schema defines that we store timestamps in UTC so we're converting our <code>Date</code>s
+     * to UTC before saving to get the proper timestamps back.
+     *
+     * This is done here in the test but you will likely want to do this
+     * in the {@link Record} implementation.
+     */
+    @Test public void
+    usingTimestampsColumns() {
+        // We store order timestamp in database as UTC (see schema)
+        // Any point in time will do, wo now is perfectly fine
+        Date orderedAt = aDate().inZone("UTC").build();
+
+        Order order = roundTrip(anOrder().orderedAt(orderedAt));
+
+        assertThat("ordered at", order.getOrderedAt(), equalTo(orderedAt));
     }
 
     private Product roundTrip(ProductBuilder builder) {

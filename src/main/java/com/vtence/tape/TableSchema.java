@@ -3,6 +3,7 @@ package com.vtence.tape;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -50,6 +51,14 @@ public class TableSchema {
 
     public Column<Time> TIME(String name, TimeZone timeZone) {
         return add(new Column<>(this, name, Types.timeIn(timeZone)));
+    }
+
+    public Column<Timestamp> TIMESTAMP(String name) {
+        return TIMESTAMP(name, TimeZone.getDefault());
+    }
+
+    public Column<Timestamp> TIMESTAMP(String name, TimeZone timeZone) {
+        return add(new Column<>(this, name, Types.timestampIn(timeZone)));
     }
 
     public <T> Column<T> add(Column<T> column) {

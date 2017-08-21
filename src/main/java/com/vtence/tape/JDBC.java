@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class JDBC {
 
@@ -29,20 +30,28 @@ public class JDBC {
         st.setObject(index, value, sqlType);
     }
 
-    public static Date toSQLDate(java.util.Date date) {
-        return date != null ? new Date(date.getTime()) : null;
-    }
-
     public static java.util.Date toJavaDate(Date date) {
         return date != null ? new java.util.Date(date.getTime()) : null;
     }
 
-    public static Time toSQLTime(java.util.Date date) {
-        return date != null ? new Time(date.getTime()) : null;
-    }
-
     public static java.util.Date toJavaDate(Time time) {
         return time != null ? new java.util.Date(time.getTime()) : null;
+    }
+
+    public static java.util.Date toJavaDate(Timestamp timestamp) throws SQLException {
+        return timestamp != null ? new java.util.Date(timestamp.getTime()) : null;
+    }
+
+    public static Date toSQLDate(java.util.Date date) {
+        return date != null ? new Date(date.getTime()) : null;
+    }
+
+    public static Time toSQLTime(java.util.Date time) {
+        return time != null ? new Time(time.getTime()) : null;
+    }
+
+    public static Timestamp toSQLTimestamp(java.util.Date instant) {
+        return instant != null ? new Timestamp(instant.getTime()) : null;
     }
 
     private JDBC() {}
