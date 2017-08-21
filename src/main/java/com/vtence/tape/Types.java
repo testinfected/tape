@@ -57,7 +57,6 @@ public final class Types {
                 statement.setNull(index, java.sql.Types.INTEGER);
         }
     };
-    private static TimeZone timeZone;
 
     public static Column.Type<Date> dateIn(final TimeZone timeZone) {
         return new Column.Type<Date>() {
