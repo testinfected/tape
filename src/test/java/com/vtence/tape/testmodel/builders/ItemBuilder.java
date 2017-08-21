@@ -12,13 +12,16 @@ public class ItemBuilder implements Builder<Item> {
     private String number = FakeNumber.aNumber();
     private Product product = aProduct().build();
     private BigDecimal price = FakePrice.aPrice();
+    private boolean inStock;
 
     public static ItemBuilder anItem() {
         return new ItemBuilder();
     }
 
     public Item build() {
-        return new Item(number, product, price);
+        Item item = new Item(number, product, price);
+        item.setInStock(inStock);
+        return item;
     }
 
     public ItemBuilder withNumber(String number) {
@@ -53,6 +56,11 @@ public class ItemBuilder implements Builder<Item> {
 
     public ItemBuilder priced(String price) {
         return priced(new BigDecimal(price));
+    }
+
+    public ItemBuilder inStock() {
+        inStock = true;
+        return this;
     }
 
     public ItemBuilder priced(BigDecimal price) {

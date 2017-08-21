@@ -37,6 +37,10 @@ public class TableSchema {
         return add(new Column<>(this, name, Types.INT));
     }
 
+    public Column<Boolean> BOOLEAN(String name) {
+        return add(new Column<>(this, name, Types.BOOLEAN));
+    }
+
     public Column<Date> DATE(String name) {
         return DATE(name, TimeZone.getDefault());
     }

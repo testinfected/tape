@@ -58,6 +58,20 @@ public final class Types {
         }
     };
 
+    public static final Column.Type<Boolean> BOOLEAN = new Column.Type<Boolean>() {
+        public Boolean get(ResultSet rs, int index) throws SQLException {
+            return rs.getBoolean(index);
+        }
+
+        public void set(PreparedStatement statement, int index, Boolean value) throws SQLException {
+            if (value != null) {
+                statement.setBoolean(index, value);
+            } else {
+                statement.setNull(index, java.sql.Types.BOOLEAN);
+            }
+        }
+    };
+
     public static Column.Type<Date> dateIn(final TimeZone timeZone) {
         return new Column.Type<Date>() {
             public Date get(ResultSet rs, int index) throws SQLException {

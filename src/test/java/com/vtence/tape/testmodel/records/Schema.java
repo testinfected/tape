@@ -30,6 +30,7 @@ public class Schema {
                 schema.STRING("number"),
                 schema.LONG("product_id"),
                 schema.BIG_DECIMAL("price"),
+                schema.BOOLEAN("in_stock"),
                 products));
     }
 

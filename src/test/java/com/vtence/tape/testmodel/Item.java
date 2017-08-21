@@ -7,6 +7,7 @@ public class Item extends Entity {
     private final String number;
     private final Product product;
     private final BigDecimal price;
+    private boolean inStock;
 
     public Item(String number, Product product, BigDecimal price) {
         this.number = number;
@@ -28,6 +29,14 @@ public class Item extends Entity {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
+    }
+
+    public boolean isInStock() {
+        return inStock;
     }
 
     @Override

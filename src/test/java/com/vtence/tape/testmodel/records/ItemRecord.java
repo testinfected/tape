@@ -17,6 +17,7 @@ public class ItemRecord extends AbstractRecord<Item> {
     private final Column<String> number;
     private final Column<Long> product;
     private final Column<BigDecimal> price;
+    private final Column<Boolean> inStock;
 
     private final Record<Product> products;
 
@@ -24,16 +25,19 @@ public class ItemRecord extends AbstractRecord<Item> {
                       Column<String> number,
                       Column<Long> product,
                       Column<BigDecimal> price,
+                      Column<Boolean> inStock,
                       Record<Product> products) {
         this.id = id;
         this.number = number;
         this.product = product;
         this.price = price;
+        this.inStock = inStock;
         this.products = products;
     }
 
     public Item hydrate(ResultSet rs) throws SQLException {
         Item item = new Item(number.get(rs), products.hydrate(rs), price.get(rs));
+        item.setInStock(inStock.get(rs));
         Access.idOf(item).set(id.get(rs));
         return item;
     }
@@ -42,5 +46,6 @@ public class ItemRecord extends AbstractRecord<Item> {
         number.set(st, item.getNumber());
         product.set(st, Access.idOf(item.getProduct()).get());
         price.set(st, item.getPrice());
+        inStock.set(st, item.isInStock());
     }
 }

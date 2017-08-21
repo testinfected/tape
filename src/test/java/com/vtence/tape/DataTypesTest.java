@@ -77,6 +77,13 @@ public class DataTypesTest {
     }
 
     @Test public void
+    usingBooleanColumns() {
+        Item item = roundTrip(anItem().inStock());
+
+        assertThat("in stock?", item.isInStock(), is(true));
+    }
+
+    @Test public void
     usingDecimalColumns() {
         Item item = roundTrip(anItem().of(aProduct()).priced(new BigDecimal("649.99")));
 
