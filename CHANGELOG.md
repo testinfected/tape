@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] - 2017-08-21
+
+### Added
+- Support for SQL TIMESTAMP columns ([#4])
+- Support for SQL DATE columns ([#6])
+- Support for SQL TIME columns ([#9])
+- Support for SQL BOOLEAN columns ([#12])
+
 ## [0.3.1] - 2016-11-23
 
 ### Changed
@@ -36,6 +44,7 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 Initial public release
 
 
+[0.4.0]: https://github.com/testinfected/tape/compare/v0.4.0...v0.3.1
 [0.3.1]: https://github.com/testinfected/tape/compare/v0.3.1...v0.3.0
 [0.3.0]: https://github.com/testinfected/tape/compare/v0.3.0...v0.2
 [0.2]: https://github.com/testinfected/tape/compare/v0.2...v0.1
@@ -43,3 +52,7 @@ Initial public release
 [#1]: https://github.com/testinfected/tape/issues/1
 [#2]: https://github.com/testinfected/tape/issues/2
 [#3]: https://github.com/testinfected/tape/issues/3
+[#4]: https://github.com/testinfected/tape/issues/4
+[#6]: https://github.com/testinfected/tape/issues/6
+[#9]: https://github.com/testinfected/tape/issues/9
+[#12]: https://github.com/testinfected/tape/issues/12
