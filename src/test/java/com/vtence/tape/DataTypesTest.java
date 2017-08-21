@@ -139,11 +139,11 @@ public class DataTypesTest {
     usingTimestampsColumns() {
         // We store order timestamp in database as UTC (see schema)
         // Any point in time will do, wo now is perfectly fine
-        Date orderedAt = aDate().inZone("UTC").build();
+        Date someInstant = aDate().inZone("UTC").build();
 
-        Order order = roundTrip(anOrder().orderedAt(orderedAt));
+        Order order = roundTrip(anOrder().placedAt(someInstant));
 
-        assertThat("ordered at", order.getOrderedAt(), equalTo(orderedAt));
+        assertThat("ordered at", order.getPlacedAt(), equalTo(someInstant));
     }
 
     private Product roundTrip(ProductBuilder builder) {

@@ -13,7 +13,7 @@ public class Order extends Entity {
     private PaymentMethod paymentMethod;
     private Date shippingDate;
     private Date shippingTime;
-    private Date orderedAt;
+    private Date placedAt;
 
     public Order(OrderNumber number) {
         this.number = number;
@@ -63,12 +63,12 @@ public class Order extends Entity {
         this.shippingTime = time;
     }
 
-    public Date getOrderedAt() {
-        return orderedAt;
+    public Date getPlacedAt() {
+        return placedAt;
     }
 
-    public void setOrderedAt(Date instant) {
-        this.orderedAt = instant;
+    public void setPlacedAt(Date instant) {
+        this.placedAt = instant;
     }
 
     public int getLineItemCount() {

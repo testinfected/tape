@@ -64,7 +64,7 @@ public class OrderBuilder implements Builder<Order> {
         return this;
     }
 
-    public OrderBuilder orderedAt(Date instant) {
+    public OrderBuilder placedAt(Date instant) {
         this.orderedAt = instant;
         return this;
     }
@@ -77,7 +77,7 @@ public class OrderBuilder implements Builder<Order> {
         order.paidUsing(paymentMethod);
         order.setShippingDate(shippingDate);
         order.setShippingTime(shippingTime);
-        order.setOrderedAt(orderedAt);
+        order.setPlacedAt(orderedAt);
         return order;
     }
 }

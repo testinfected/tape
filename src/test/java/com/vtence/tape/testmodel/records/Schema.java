@@ -52,7 +52,7 @@ public class Schema {
                 schema.LONG("payment_id"),
                 schema.DATE("shipping_date", TimeZone.getTimeZone("UTC")),
                 schema.TIME("shipping_time", TimeZone.getTimeZone("UTC")),
-                schema.TIMESTAMP("ordered_at", TimeZone.getTimeZone("UTC")),
+                schema.TIMESTAMP("placed_at", TimeZone.getTimeZone("UTC")),
                 payments));
     }
 
