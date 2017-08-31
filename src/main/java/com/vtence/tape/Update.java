@@ -33,12 +33,20 @@ public class Update<T> {
     public int execute(Connection connection) {
         try( PreparedStatement update = connection.prepareStatement(statement.toSql())) {
             set.dehydrate(update, entity);
-            for (int i = 0; i < parameters.size(); i++) {
-                JDBC.setParameter(update, parameterIndex(i), parameters.get(i));
-            }
-            return update.executeUpdate();
+            setParameters(update);
+            return execute(update);
         } catch (SQLException e) {
             throw new JDBCException("Could not update entity " + entity, e);
+        }
+    }
+
+    private int execute(PreparedStatement update) throws SQLException {
+        return update.executeUpdate();
+    }
+
+    private void setParameters(PreparedStatement update) throws SQLException {
+        for (int i = 0; i < parameters.size(); i++) {
+            JDBC.setParameter(update, parameterIndex(i), parameters.get(i));
         }
     }
 

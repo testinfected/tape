@@ -28,12 +28,20 @@ public class Delete<T> {
 
     public int execute(Connection connection) {
         try (PreparedStatement delete = connection.prepareStatement(statement.toSql())) {
-            for (int i = 0; i < parameters.size(); i++) {
-                JDBC.setParameter(delete, i + 1, parameters.get(i));
-            }
-            return delete.executeUpdate();
+            setParameters(delete);
+            return execute(delete);
         } catch (SQLException e) {
             throw new JDBCException("Could not execute delete", e);
         }
+    }
+
+    private void setParameters(PreparedStatement delete) throws SQLException {
+        for (int i = 0; i < parameters.size(); i++) {
+            JDBC.setParameter(delete, i + 1, parameters.get(i));
+        }
+    }
+
+    private int execute(PreparedStatement delete) throws SQLException {
+        return delete.executeUpdate();
     }
 }

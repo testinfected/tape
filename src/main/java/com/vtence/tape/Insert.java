@@ -24,11 +24,15 @@ public class Insert<T> {
     public int execute(final Connection connection) {
         try (PreparedStatement insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS)) {
             into.dehydrate(insert, entity);
-            int rowsInserted = insert.executeUpdate();
+            int rowsInserted = execute(insert);
             into.handleKeys(insert.getGeneratedKeys(), entity);
             return rowsInserted;
         } catch (SQLException e) {
             throw new JDBCException("Could not insert entity " + entity, e);
         }
+    }
+
+    private int execute(PreparedStatement insert) throws SQLException {
+        return insert.executeUpdate();
     }
 }

@@ -57,14 +57,14 @@ public class Select<T> {
         return this;
     }
 
-    public Select<T> where(String clause, Object... parameters) {
-        statement.where(clause);
+    public Select<T> where(String conditions, Object... parameters) {
+        statement.where(conditions);
         this.parameters.addAll(Arrays.asList(parameters));
         return this;
     }
 
-    public Select<T> orderBy(String clause) {
-        statement.orderBy(clause);
+    public Select<T> orderBy(String expression) {
+        statement.orderBy(expression);
         return this;
     }
 
@@ -81,9 +81,7 @@ public class Select<T> {
     public List<T> list(final Connection connection) {
         List<T> entities = new ArrayList<>();
         try (PreparedStatement query = connection.prepareStatement(statement.toSql())) {
-            for (int index = 0; index < parameters.size(); index++) {
-                JDBC.setParameter(query, index + 1, parameters.get(index));
-            }
+            setParameters(query);
             ResultSet resultSet = execute(query);
             while (resultSet.next()) {
                 entities.add(from.hydrate(resultSet));
@@ -93,6 +91,12 @@ public class Select<T> {
         }
 
         return entities;
+    }
+
+    private void setParameters(PreparedStatement query) throws SQLException {
+        for (int index = 0; index < parameters.size(); index++) {
+            JDBC.setParameter(query, index + 1, parameters.get(index));
+        }
     }
 
     private ResultSet execute(PreparedStatement query) throws SQLException {
