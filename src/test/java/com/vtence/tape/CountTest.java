@@ -48,12 +48,26 @@ public class CountTest {
         );
 
         int count = Count.from(products).execute(connection);
-        assertThat("records count", count, is(5));
+        assertThat("total products", count, is(5));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void
+    countingOnlyThoseRecordsThatFulfillASpecifiedCriterion() {
+        persist(aProduct().named("Bulldog"),
+                aProduct().named("Dalmatian"),
+                aProduct().named("Goldeng Labrador"),
+                aProduct().named("Chocolate Labrador"),
+                aProduct().named("Black Labrador"));
+
+        int count = Count.from(products).where("name like ?", "% Labrador").execute(connection);
+        assertThat("labradors count", count, is(3));
     }
 
     private void assertEmpty(Table<?> table) throws SQLException {
         int count = Count.from(table).execute(connection);
-        assertThat("records count", count, is(0));
+        assertThat("total records", count, is(0));
     }
 
     @SafeVarargs
