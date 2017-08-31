@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0] - 2017-08-30
+
+### Added
+- Count statements ([#5])
+
 ## [0.4.0] - 2017-08-21
 
 ### Added
@@ -44,6 +49,7 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 Initial public release
 
 
+[0.5.0]: https://github.com/testinfected/tape/compare/v0.4.0...v0.4.0
 [0.4.0]: https://github.com/testinfected/tape/compare/v0.4.0...v0.3.1
 [0.3.1]: https://github.com/testinfected/tape/compare/v0.3.1...v0.3.0
 [0.3.0]: https://github.com/testinfected/tape/compare/v0.3.0...v0.2
@@ -53,6 +59,7 @@ Initial public release
 [#2]: https://github.com/testinfected/tape/issues/2
 [#3]: https://github.com/testinfected/tape/issues/3
 [#4]: https://github.com/testinfected/tape/issues/4
+[#5]: https://github.com/testinfected/tape/issues/5
 [#6]: https://github.com/testinfected/tape/issues/6
 [#9]: https://github.com/testinfected/tape/issues/9
 [#12]: https://github.com/testinfected/tape/issues/12
