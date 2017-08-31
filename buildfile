@@ -8,8 +8,8 @@ Release.commit_message = lambda { |version| "Bump version number to #{version}" 
 Release.tag_name = lambda { |version| "v#{version}" }
 
 define 'tape', :group => 'com.vtence.tape', :version => VERSION_NUMBER do
-  compile.options.source = '1.7'
-  compile.options.target = '1.7'
+  compile.options.source = '1.8'
+  compile.options.target = '1.8'
 
   test.with :hamcrest, :h2, :flyway
 
