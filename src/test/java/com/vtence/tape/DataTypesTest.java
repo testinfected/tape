@@ -2,7 +2,6 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.support.UnitOfWork;
 import com.vtence.tape.testmodel.Access;
 import com.vtence.tape.testmodel.CreditCardDetails;
 import com.vtence.tape.testmodel.Item;
@@ -15,12 +14,14 @@ import com.vtence.tape.testmodel.builders.ItemBuilder;
 import com.vtence.tape.testmodel.builders.OrderBuilder;
 import com.vtence.tape.testmodel.builders.ProductBuilder;
 import com.vtence.tape.testmodel.records.Schema;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.CreditCardDetailsBuilder.aCreditCard;
@@ -156,61 +157,50 @@ public class DataTypesTest {
     private Product roundTrip(ProductBuilder builder) {
         Product product = builder.build();
         persist(product);
-        return Select.from(products).first(connection);
+        return assertFound(Select.from(products).first(connection));
     }
 
     private Item roundTrip(ItemBuilder builder) {
         Item item = builder.build();
         persist(item.getProduct());
         persist(item);
-        return Select.from(items).join(products, "product_id = products.id").first(connection);
+        return assertFound(Select.from(items).join(products, "product_id = products.id").first(connection));
     }
 
     private CreditCardDetails roundTrip(CreditCardDetailsBuilder builder) {
         CreditCardDetails card = builder.build();
         persist(card);
-        return (CreditCardDetails) Select.from(payments).first(connection);
+        return (CreditCardDetails) assertFound(Select.from(payments).first(connection));
     }
 
     private Order roundTrip(OrderBuilder builder) {
         Order order = builder.build();
         persist(order);
-        return Select.from(orders).first(connection);
+        return assertFound(Select.from(orders).first(connection));
     }
 
     private void persist(final Product product) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(products, product).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(products, product).execute(connection));
     }
 
     private void persist(final Item item) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(items, item).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(items, item).execute(connection));
     }
 
     private void persist(final CreditCardDetails card) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(payments, card).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(payments, card).execute(connection));
     }
 
     private void persist(final Order order) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(orders, order).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(orders, order).execute(connection));
     }
 
     private Long idOf(Object entity) {
         return Access.idOf(entity).get();
+    }
+
+    private <T> T assertFound(Optional<T> record) {
+        assertThat("found", record.isPresent(), CoreMatchers.is(true));
+        return record.get();
     }
 }

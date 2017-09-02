@@ -2,14 +2,15 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.support.UnitOfWork;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.util.Optional;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
@@ -37,14 +38,14 @@ public class UpdateTest {
 
         original.setName("Labrador Retriever");
         original.setDescription("A fun type of dog");
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                int updated = Update.set(products, original).where("number = ?", "12345678").execute(connection);
-                assertThat("records updated", updated, is(1));
-            }
+        transactor.perform(() -> {
+            int updated = Update.set(products, original).where("number = ?", "12345678").execute(connection);
+            assertThat("records updated", updated, is(1));
         });
 
-        Product record = Select.from(products).where("name = ?", "Labrador Retriever").first(connection);
+        Product record = assertFound(Select.from(products)
+                                           .where("name = ?", "Labrador Retriever")
+                                           .first(connection));
         assertThat("updated record", record, samePropertyValuesAs(original));
     }
 
@@ -53,12 +54,13 @@ public class UpdateTest {
     }
 
     private Product persist(final Product product) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(products, product).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(products, product).execute(connection));
 
         return product;
+    }
+
+    private <T> T assertFound(Optional<T> record) {
+        assertThat("found", record.isPresent(), CoreMatchers.is(true));
+        return record.get();
     }
 }

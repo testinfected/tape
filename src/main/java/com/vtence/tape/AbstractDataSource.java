@@ -27,10 +27,9 @@ public abstract class AbstractDataSource implements DataSource {
         return 0;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T unwrap(Class<T> type) throws SQLException {
         if (!isDataSource(type)) throw new IllegalArgumentException(type.getName());
-        return (T) this;
+        return type.cast(this);
     }
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {

@@ -2,7 +2,6 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.support.UnitOfWork;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
@@ -82,11 +81,7 @@ public class CountTest {
     }
 
     private <T> T persist(final T entity) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(tableFor(entity), entity).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(tableFor(entity), entity).execute(connection));
         return entity;
     }
 

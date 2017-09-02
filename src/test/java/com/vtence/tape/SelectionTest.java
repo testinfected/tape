@@ -2,7 +2,6 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.support.UnitOfWork;
 import com.vtence.tape.testmodel.CreditCardDetails;
 import com.vtence.tape.testmodel.Item;
 import com.vtence.tape.testmodel.LineItem;
@@ -21,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.Access.idOf;
@@ -67,7 +67,8 @@ public class SelectionTest {
     retrievingASingleRecordWithAllColumns() {
         Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
 
-        Product record = Select.from(products).first(connection);
+        Product record = assertFound(Select.from(products)
+                                           .first(connection));
         assertThat("record", record, Products.sameProductAs(original));
     }
 
@@ -77,7 +78,8 @@ public class SelectionTest {
     selectingAllRecordsFromATable() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
-        Collection<Product> selection = Select.from(products).list(connection);
+        Collection<Product> selection = Select.from(products)
+                                              .list(connection);
         assertThat("selection", selection, hasSize(equalTo(3)));
         assertThat("selected products", selection, containsInAnyOrder(
                 productNamed("Bulldog"),
@@ -91,7 +93,8 @@ public class SelectionTest {
     selectingTheFirstInACollectionOfRecords() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
-        Product selection = Select.from(products).first(connection);
+        Product selection = assertFound(Select.from(products)
+                                              .first(connection));
         assertThat("selection", selection, is(productNamed("Bulldog")));
     }
 
@@ -101,7 +104,9 @@ public class SelectionTest {
     selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
-        Product selection = Select.from(products).where("name = ?", "Labrador").first(connection);
+        Product selection = assertFound(Select.from(products)
+                                              .where("name = ?", "Labrador")
+                                              .first(connection));
         assertThat("selection", selection, is(productNamed("Labrador")));
     }
 
@@ -113,9 +118,9 @@ public class SelectionTest {
                 aProduct().named("French Bulldog").describedAs("male"),
                 aProduct().named("Labrador Retriever").describedAs("male"));
 
-        Product selection = Select.from(products)
-                                  .where("name like ? and description = ?", "%Bulldog", "male")
-                                  .first(connection);
+        Product selection = assertFound(Select.from(products)
+                                              .where("name like ? and description = ?", "%Bulldog", "male")
+                                              .first(connection));
         assertThat("selection", selection, is(productNamed("French Bulldog")));
     }
 
@@ -156,10 +161,10 @@ public class SelectionTest {
         Product bulldog = persist(aProduct().named("Bulldog").withNumber("BULLDOG"));
         persist(a(bulldog).priced("899.00"));
 
-        Item selection = Select.from(items, "i")
-                               .join(products, "p", "i.product_id = p.id")
-                               .where("p.name = ?", "Bulldog")
-                               .first(connection);
+        Item selection = assertFound(Select.from(items, "i")
+                                           .join(products, "p", "i.product_id = p.id")
+                                           .where("p.name = ?", "Bulldog")
+                                           .first(connection));
         assertThat("selection", selection, itemWithProductNumber("BULLDOG"));
     }
 
@@ -188,10 +193,10 @@ public class SelectionTest {
         persist(anOrder().withNumber("10000002")
                          .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
 
-        Order selection = Select.from(orders, "o")
-                                .leftJoin(payments, "p", "o.payment_id = p.id")
-                                .where("o.number like ?", "1000%")
-                                .first(connection);
+        Order selection = assertFound(Select.from(orders, "o")
+                                            .leftJoin(payments, "p", "o.payment_id = p.id")
+                                            .where("o.number like ?", "1000%")
+                                            .first(connection));
         assertThat("selection", selection, orderWithNumber(startsWith("1000")));
     }
 
@@ -218,6 +223,11 @@ public class SelectionTest {
                 lineWithItemNumber("00000001")));
     }
 
+    private <T> T assertFound(Optional<T> record) {
+        assertThat("found", record.isPresent(), is(true));
+        return record.get();
+    }
+
     @SafeVarargs
     private final <T> void persist(final Builder<T>... builders) {
         for (final Builder<T> builder : builders) {
@@ -230,11 +240,7 @@ public class SelectionTest {
     }
 
     private <T> T persist(final T entity) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(tableFor(entity), entity).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(tableFor(entity), entity).execute(connection));
         return entity;
     }
 

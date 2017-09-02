@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class Select<T> {
 
@@ -68,14 +70,13 @@ public class Select<T> {
         return this;
     }
 
-    public T first(final Connection connection) {
+    public Optional<T> first(final Connection connection) {
         statement.limit(1);
-        List<T> entities = list(connection);
-        return entities.isEmpty() ? null : firstOf(entities);
+        return stream(connection).findFirst();
     }
 
-    private T firstOf(List<T> entities) {
-        return entities.get(0);
+    public Stream<T> stream(Connection connection) {
+        return list(connection).stream();
     }
 
     public List<T> list(final Connection connection) {

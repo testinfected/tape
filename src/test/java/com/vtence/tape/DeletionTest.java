@@ -2,7 +2,6 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.support.UnitOfWork;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
@@ -15,7 +14,10 @@ import java.util.List;
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class DeletionTest {
@@ -37,12 +39,10 @@ public class DeletionTest {
                 aProduct().named("Labrador Retriever"),
                 aProduct().named("Dalmatian"));
 
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                int deleted = Delete.from(products)
-                                    .execute(connection);
-                assertThat("records deleted", deleted, is(3));
-            }
+        transactor.perform(() -> {
+            int deleted = Delete.from(products)
+                                .execute(connection);
+            assertThat("records deleted", deleted, is(3));
         });
 
         List<Product> records = Select.from(products)
@@ -56,13 +56,11 @@ public class DeletionTest {
                 aProduct().named("Labrador Retriever"),
                 aProduct().named("Dalmatian"));
 
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                int deleted = Delete.from(products)
-                                    .where("number = ?", "12345678")
-                                    .execute(connection);
-                assertThat("records deleted", deleted, is(1));
-            }
+        transactor.perform(() -> {
+            int deleted = Delete.from(products)
+                                .where("number = ?", "12345678")
+                                .execute(connection);
+            assertThat("records deleted", deleted, is(1));
         });
 
         List<Product> records = Select.from(products)
@@ -82,11 +80,7 @@ public class DeletionTest {
     }
 
     private Product persist(final Product product) {
-        transactor.perform(new UnitOfWork() {
-            public void execute() {
-                Insert.into(products, product).execute(connection);
-            }
-        });
+        transactor.perform(() -> Insert.into(products, product).execute(connection));
 
         return product;
     }
