@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.0] - 2017-08-02
+
+### Added
+
+- Method to stream query results instead of listing. 
+`Select#stream` complements `Select#list` ([#15])
+- `StatementExecutor` as an alternative to using `Connection`s directly. 
+All statements now provide overloads that accept a `StatementExecutor` ([#16])
+
+### Changed
+
+- `Select#first` now returns an `Optional<T>` instead of a potentially `null` value ([#8])
+
 ## [0.5.0] - 2017-08-30
 
 ### Added
@@ -49,7 +62,8 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 Initial public release
 
 
-[0.5.0]: https://github.com/testinfected/tape/compare/v0.4.0...v0.4.0
+[1.0.0]: https://github.com/testinfected/tape/compare/v1.0.0...v0.5.0
+[0.5.0]: https://github.com/testinfected/tape/compare/v0.5.0...v0.4.0
 [0.4.0]: https://github.com/testinfected/tape/compare/v0.4.0...v0.3.1
 [0.3.1]: https://github.com/testinfected/tape/compare/v0.3.1...v0.3.0
 [0.3.0]: https://github.com/testinfected/tape/compare/v0.3.0...v0.2
@@ -61,5 +75,8 @@ Initial public release
 [#4]: https://github.com/testinfected/tape/issues/4
 [#5]: https://github.com/testinfected/tape/issues/5
 [#6]: https://github.com/testinfected/tape/issues/6
+[#8]: https://github.com/testinfected/tape/issues/8
 [#9]: https://github.com/testinfected/tape/issues/9
 [#12]: https://github.com/testinfected/tape/issues/12
+[#15]: https://github.com/testinfected/tape/issues/15
+[#16]: https://github.com/testinfected/tape/issues/16
