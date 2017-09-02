@@ -26,6 +26,10 @@ public class Delete<T> {
         return this;
     }
 
+    public int execute(StatementExecutor executor) {
+        return executor.execute(this::execute);
+    }
+
     public int execute(Connection connection) {
         try (PreparedStatement delete = connection.prepareStatement(statement.toSql())) {
             setParameters(delete);

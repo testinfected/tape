@@ -22,6 +22,11 @@ public class UpdateTest {
 
     Database database = Database.in(memory());
     Connection connection = database.start();
+    /**
+     * An alternative to using a <code>Connection</code> is to provide a {@link StatementExecutor}
+     */
+    StatementExecutor executor = database::execute;
+
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
     Table<Product> products = Schema.products();
@@ -39,7 +44,10 @@ public class UpdateTest {
         original.setName("Labrador Retriever");
         original.setDescription("A fun type of dog");
         transactor.perform(() -> {
-            int updated = Update.set(products, original).where("number = ?", "12345678").execute(connection);
+            int updated = Update.set(products, original)
+                                .where("number = ?", "12345678")
+                                // another option would be to provide a `Connection`
+                                .execute(executor);
             assertThat("records updated", updated, is(1));
         });
 

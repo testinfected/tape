@@ -24,6 +24,11 @@ public class InsertionTest {
 
     Database database = Database.in(memory());
     Connection connection = database.start();
+    /**
+     * An alternative to using a <code>Connection</code> is to provide a {@link StatementExecutor}
+     */
+    StatementExecutor executor = database::execute;
+
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
     Table<Product> products = Schema.products();
@@ -54,7 +59,7 @@ public class InsertionTest {
         assertThat("orginal id", idOf(entity), nullValue());
 
         transactor.perform(() -> Insert.into(products, entity)
-                                       .execute(connection));
+                                       .execute(executor));
 
         assertThat("generated id", idOf(entity), not(nullValue()));
     }

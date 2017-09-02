@@ -16,7 +16,6 @@ import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -24,6 +23,11 @@ public class DeletionTest {
 
     Database database = Database.in(memory());
     Connection connection = database.start();
+    /**
+     * An alternative to using a <code>Connection</code> is to provide a {@link StatementExecutor}
+     */
+    StatementExecutor executor = database::execute;
+
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
     Table<Product> products = Schema.products();
@@ -33,7 +37,7 @@ public class DeletionTest {
         database.stop();
     }
 
-    @SuppressWarnings("unchecked") @Test public void
+    @Test public void
     deletingAllRecords() {
         persist(aProduct().named("English Bulldog"),
                 aProduct().named("Labrador Retriever"),
@@ -47,7 +51,7 @@ public class DeletionTest {
 
         List<Product> records = Select.from(products)
                                       .list(connection);
-        assertThat("existing records", records, empty());
+        assertThat("records left", records, empty());
     }
 
     @SuppressWarnings("unchecked") @Test public void
@@ -59,14 +63,13 @@ public class DeletionTest {
         transactor.perform(() -> {
             int deleted = Delete.from(products)
                                 .where("number = ?", "12345678")
-                                .execute(connection);
+                                .execute(executor);
             assertThat("records deleted", deleted, is(1));
         });
 
         List<Product> records = Select.from(products)
                                       .list(connection);
-        assertThat("existing records", records, hasSize(2));
-        assertThat("existing records", records, containsInAnyOrder(productNamed("Labrador Retriever"), productNamed("Dalmatian")));
+        assertThat("records left", records, containsInAnyOrder(productNamed("Labrador Retriever"), productNamed("Dalmatian")));
     }
 
     private void persist(final Builder<Product>... products) {

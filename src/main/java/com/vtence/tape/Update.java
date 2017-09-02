@@ -30,6 +30,10 @@ public class Update<T> {
         return this;
     }
 
+    public int execute(StatementExecutor executor) {
+        return executor.execute(this::execute);
+    }
+
     public int execute(Connection connection) {
         try( PreparedStatement update = connection.prepareStatement(statement.toSql())) {
             set.dehydrate(update, entity);

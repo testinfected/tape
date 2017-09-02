@@ -21,7 +21,11 @@ public class Insert<T> {
         this.statement = new InsertStatement(table.name(), table.columnNames(false));
     }
 
-    public int execute(final Connection connection) {
+    public int execute(StatementExecutor executor) {
+        return executor.execute(this::execute);
+    }
+
+    public int execute(Connection connection) {
         try (PreparedStatement insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS)) {
             into.dehydrate(insert, entity);
             int rowsInserted = execute(insert);
