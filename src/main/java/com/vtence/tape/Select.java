@@ -70,13 +70,25 @@ public class Select<T> {
         return this;
     }
 
-    public Optional<T> first(final Connection connection) {
+    public Optional<T> first(StatementExecutor executor) {
+        return executor.execute(this::first);
+    }
+
+    public Optional<T> first(Connection connection) {
         statement.limit(1);
         return stream(connection).findFirst();
     }
 
+    public Stream<T> stream(StatementExecutor executor) {
+        return executor.execute(this::stream);
+    }
+
     public Stream<T> stream(Connection connection) {
         return list(connection).stream();
+    }
+
+    public List<T> list(StatementExecutor executor) {
+        return executor.execute(this::list);
     }
 
     public List<T> list(final Connection connection) {

@@ -9,7 +9,6 @@ import com.vtence.tape.testmodel.Order;
 import com.vtence.tape.testmodel.PaymentMethod;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
-import com.vtence.tape.testmodel.matchers.Products;
 import com.vtence.tape.testmodel.records.Schema;
 import org.junit.After;
 import org.junit.Test;
@@ -34,6 +33,7 @@ import static com.vtence.tape.testmodel.matchers.Items.itemWithProductNumber;
 import static com.vtence.tape.testmodel.matchers.Lines.lineWithItemNumber;
 import static com.vtence.tape.testmodel.matchers.Orders.orderWithNumber;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
+import static com.vtence.tape.testmodel.matchers.Products.sameProductAs;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -47,7 +47,15 @@ public class SelectionTest {
 
     Database database = Database.in(memory());
 
+    /**
+     * All statements accepts a {@link Connection}
+     */
     Connection connection = database.start();
+    /**
+     * An alternative to using a <code>Connection</code> is to provide a {@link StatementExecutor}
+     */
+    StatementExecutor executor = database::execute;
+
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
     Table<Product> products = Schema.products();
@@ -69,7 +77,8 @@ public class SelectionTest {
 
         Product record = assertFound(Select.from(products)
                                            .first(connection));
-        assertThat("record", record, Products.sameProductAs(original));
+
+        assertThat("record", record, sameProductAs(original));
     }
 
     @SuppressWarnings("unchecked")
@@ -80,6 +89,7 @@ public class SelectionTest {
 
         Collection<Product> selection = Select.from(products)
                                               .list(connection);
+
         assertThat("selection", selection, hasSize(equalTo(3)));
         assertThat("selected products", selection, containsInAnyOrder(
                 productNamed("Bulldog"),
@@ -87,18 +97,17 @@ public class SelectionTest {
                 productNamed("Labrador")));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     selectingTheFirstInACollectionOfRecords() {
         persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
 
         Product selection = assertFound(Select.from(products)
-                                              .first(connection));
+                                              // use an executor rather than a connection this time
+                                              .first(executor));
         assertThat("selection", selection, is(productNamed("Bulldog")));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() {
@@ -106,7 +115,9 @@ public class SelectionTest {
 
         Product selection = assertFound(Select.from(products)
                                               .where("name = ?", "Labrador")
-                                              .first(connection));
+                                              // another way to select records is to stream results
+                                              .stream(connection)
+                                              .findFirst());
         assertThat("selection", selection, is(productNamed("Labrador")));
     }
 
@@ -120,11 +131,12 @@ public class SelectionTest {
 
         Product selection = assertFound(Select.from(products)
                                               .where("name like ? and description = ?", "%Bulldog", "male")
-                                              .first(connection));
+                                              // streaming can be done with an executor too ...
+                                              .stream(executor)
+                                              .findFirst());
         assertThat("selection", selection, is(productNamed("French Bulldog")));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     aliasingTheTableName() {
@@ -132,7 +144,8 @@ public class SelectionTest {
 
         List<Product> selection = Select.from(products, "p")
                                         .where("p.name = ?", "Labrador")
-                                        .list(connection);
+                                        // ... as is listing
+                                        .list(executor);
         assertThat("selection", selection, hasSize(1));
     }
 
@@ -168,7 +181,6 @@ public class SelectionTest {
         assertThat("selection", selection, itemWithProductNumber("BULLDOG"));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() throws ParseException {
@@ -186,7 +198,6 @@ public class SelectionTest {
         assertThat("selection", selection, everyItem(orderWithNumber(startsWith("1000"))));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     usingAliasesWithLeftJoins() throws ParseException {

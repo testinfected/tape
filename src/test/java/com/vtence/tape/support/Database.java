@@ -3,6 +3,7 @@ package com.vtence.tape.support;
 import com.vtence.tape.DriverManagerDataSource;
 import com.vtence.tape.JDBC;
 import com.vtence.tape.JDBCException;
+import com.vtence.tape.Statement;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,6 +32,10 @@ public class Database {
         migrator.migrate();
         cleaner.clean(connection);
         return connection;
+    }
+
+    public <T> T execute(Statement<T> statement) {
+        return statement.apply(connection);
     }
 
     public void stop() {
