@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/testinfected/tape.svg?branch=master)](https://travis-ci.org/testinfected/tape)
-[![codecov.io](http://codecov.io/github/testinfected/tape/coverage.svg?branch=master)](http://codecov.io/github/pgjdbc/pgjdbc?branch=master)
+[![codecov.io](http://codecov.io/github/testinfected/tape/coverage.svg?branch=master)](http://codecov.io/github/testinfected/tape?branch=master)
 [![Maven Central](https://img.shields.io/maven-central/v/com.vtence.tape/tape.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.vtence.tape/tape)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat)](http://vtence.mit-license.org)
 
