@@ -25,7 +25,7 @@ public class Count {
         try (PreparedStatement query = connection.prepareStatement(statement.toSql())) {
             setParameters(query);
             ResultSet rs = execute(query);
-            rs.first();
+            rs.next();
             return rs.getInt(1);
         } catch (SQLException e) {
             throw new JDBCException("Could not execute query", e);
