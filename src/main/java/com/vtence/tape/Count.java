@@ -38,6 +38,10 @@ public class Count {
         return this;
     }
 
+    public int execute(StatementExecutor executor) {
+        return executor.execute(this::execute);
+    }
+
     private ResultSet execute(PreparedStatement query) throws SQLException {
         return query.executeQuery();
     }

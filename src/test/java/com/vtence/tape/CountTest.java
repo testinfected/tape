@@ -23,6 +23,11 @@ public class CountTest {
     Database database = Database.in(memory());
 
     Connection connection = database.start();
+    /**
+     * An alternative to using a <code>Connection</code> is to provide a {@link StatementExecutor}
+     */
+    StatementExecutor executor = database::execute;
+
     JDBCTransactor transactor = new JDBCTransactor(connection);
 
     Table<Product> products = Schema.products();
@@ -60,7 +65,9 @@ public class CountTest {
                 aProduct().named("Chocolate Labrador"),
                 aProduct().named("Black Labrador"));
 
-        int count = Count.from(products).where("name like ?", "% Labrador").execute(connection);
+        int count = Count.from(products)
+                         .where("name like ?", "% Labrador")
+                         .execute(executor);
         assertThat("labradors count", count, is(3));
     }
 
