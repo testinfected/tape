@@ -2,7 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.0.0] - 2017-08-02
+## [1.0.1] - 2017-09-07
+
+### Fixed
+
+- `Count` now works with forward only result sets ([#17])
+- `Count` did not provide support for `StatementExecutor`s. This is now fixed (see [#18])
+
+## [1.0.0] - 2017-09-02
 
 ### Added
 
