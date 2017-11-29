@@ -3,10 +3,10 @@ package com.vtence.tape.support;
 import com.vtence.tape.DriverManagerDataSource;
 import com.vtence.tape.JDBC;
 import com.vtence.tape.JDBCException;
-import com.vtence.tape.Statement;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 public class Database {
 
@@ -34,7 +34,7 @@ public class Database {
         return connection;
     }
 
-    public <T> T execute(Statement<T> statement) {
+    public <T> T execute(Function<Connection, T> statement) {
         return statement.apply(connection);
     }
 
