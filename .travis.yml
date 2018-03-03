@@ -5,7 +5,4 @@ rvm:
 jdk:
   - openjdk8
 
-script: bundle exec buildr clean install jacoco:report
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+script: bundle exec buildr clean install
