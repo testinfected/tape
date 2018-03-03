@@ -13,7 +13,6 @@ public abstract class AbstractRecord<T> implements Record<T> {
     }
 
     private long generatedId(ResultSet rs) throws SQLException {
-        rs.first();
         return rs.getLong(1);
     }
 }

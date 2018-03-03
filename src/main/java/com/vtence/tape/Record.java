@@ -10,5 +10,5 @@ public interface Record<T> {
 
     void dehydrate(PreparedStatement st, T entity) throws SQLException;
 
-    void handleKeys(ResultSet keys, T entity) throws SQLException;
+    default void handleKeys(ResultSet keys, T entity) throws SQLException {}
 }

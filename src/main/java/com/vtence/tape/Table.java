@@ -41,6 +41,7 @@ public class Table<T> implements Record<T> {
     }
 
     public void handleKeys(ResultSet keys, T entity) throws SQLException {
-        record.handleKeys(keys, entity);
+        if (keys.next())
+            record.handleKeys(keys, entity);
     }
 }
