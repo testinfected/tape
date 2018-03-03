@@ -2,12 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] - 2018-03-02
+
+### Changed
+
+- Generated key handling gets simpler. A default no-op implementation has been added and result
+set is automatically advanced to the first result. ([#19])
+- `StatementExecutor` is now a pure function to ease integration with existing code. ([#20])
+
 ## [1.0.1] - 2017-09-07
 
 ### Fixed
 
 - `Count` now works with forward only result sets ([#17])
-- `Count` did not provide support for `StatementExecutor`s. This is now fixed (see [#18])
+- `Count` did not provide support for `StatementExecutor`s. This is now fixed ([#18])
 
 ## [1.0.0] - 2017-09-02
 
@@ -69,6 +77,7 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 Initial public release
 
 
+[1.0.1]: https://github.com/testinfected/tape/compare/v1.0.1...v1.0.0
 [1.0.0]: https://github.com/testinfected/tape/compare/v1.0.0...v0.5.0
 [0.5.0]: https://github.com/testinfected/tape/compare/v0.5.0...v0.4.0
 [0.4.0]: https://github.com/testinfected/tape/compare/v0.4.0...v0.3.1
@@ -87,3 +96,7 @@ Initial public release
 [#12]: https://github.com/testinfected/tape/issues/12
 [#15]: https://github.com/testinfected/tape/issues/15
 [#16]: https://github.com/testinfected/tape/issues/16
+[#17]: https://github.com/testinfected/tape/issues/17
+[#18]: https://github.com/testinfected/tape/issues/18
+[#19]: https://github.com/testinfected/tape/issues/19
+[#20]: https://github.com/testinfected/tape/issues/20
