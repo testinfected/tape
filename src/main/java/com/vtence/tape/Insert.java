@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-
 public class Insert<T> {
     private final Table<? super T> into;
     private final T entity;
@@ -26,17 +24,25 @@ public class Insert<T> {
     }
 
     public int execute(Connection connection) {
-        try (PreparedStatement insert = connection.prepareStatement(statement.toSql(), RETURN_GENERATED_KEYS)) {
-            into.dehydrate(insert, entity);
+        try (PreparedStatement insert = statement.prepare(connection)) {
+            dehydrate(insert);
             int rowsInserted = execute(insert);
-            into.handleKeys(insert.getGeneratedKeys(), entity);
+            handleKeys(insert);
             return rowsInserted;
         } catch (SQLException e) {
             throw new JDBCException("Could not insert entity " + entity, e);
         }
     }
 
+    private void dehydrate(PreparedStatement insert) throws SQLException {
+        into.dehydrate(insert, entity);
+    }
+
     private int execute(PreparedStatement insert) throws SQLException {
         return insert.executeUpdate();
+    }
+
+    private void handleKeys(PreparedStatement insert) throws SQLException {
+        into.handleKeys(insert.getGeneratedKeys(), entity);
     }
 }

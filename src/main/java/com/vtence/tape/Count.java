@@ -4,14 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 
 public class Count {
     private final CountStatement statement;
-    private final List<Object> parameters = new ArrayList<>();
 
     public Count(Table<?> table) {
         this.statement = new CountStatement(table.name());
@@ -22,8 +17,7 @@ public class Count {
     }
 
     public int execute(Connection connection) {
-        try (PreparedStatement query = connection.prepareStatement(statement.toSql())) {
-            setParameters(query);
+        try (PreparedStatement query = statement.prepare(connection)) {
             ResultSet rs = execute(query);
             rs.next();
             return rs.getInt(1);
@@ -34,7 +28,7 @@ public class Count {
 
     public Count where(String conditions, Object... parameters) {
         statement.where(conditions);
-        this.parameters.addAll(asList(parameters));
+        statement.addParameters(parameters);
         return this;
     }
 
@@ -44,11 +38,5 @@ public class Count {
 
     private ResultSet execute(PreparedStatement query) throws SQLException {
         return query.executeQuery();
-    }
-
-    private void setParameters(PreparedStatement query) throws SQLException {
-        for (int index = 0; index < parameters.size(); index++) {
-            JDBC.setParameter(query, index + 1, parameters.get(index));
-        }
     }
 }

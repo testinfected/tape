@@ -1,14 +1,10 @@
 package com.vtence.tape;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface Record<T> {
+public interface Record<T> extends Hydrator<T>, Dehydrator<T>, KeyHandler<T> {
 
-    T hydrate(ResultSet rs) throws SQLException;
-
-    void dehydrate(PreparedStatement st, T entity) throws SQLException;
-
+    @Override
     default void handleKeys(ResultSet keys, T entity) throws SQLException {}
 }

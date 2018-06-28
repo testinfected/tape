@@ -1,15 +1,13 @@
 package com.vtence.tape;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
-public class SelectStatement {
+public class SelectStatement implements Statement {
 
     private final String table;
     private final Map<String, List<String>> columns = new HashMap<>();
@@ -19,6 +17,8 @@ public class SelectStatement {
     private final StringBuilder whereClause = new StringBuilder();
     private final StringBuilder orderByClause = new StringBuilder();
     private final StringBuilder limitClause = new StringBuilder();
+
+    private final List<Object> parameters = new ArrayList<>();
 
     public SelectStatement(String table, String... columns) {
         this.table = table;
@@ -74,6 +74,10 @@ public class SelectStatement {
         limitClause.append(rowCount);
     }
 
+    public void addParameters(Object... parameters) {
+        this.parameters.addAll(asList(parameters));
+    }
+
     public String toSql() {
         StringBuilder sql = new StringBuilder();
         sql.append(selectClause());
@@ -93,6 +97,12 @@ public class SelectStatement {
             if (it.hasNext()) clause.append(", ");
         }
         return clause.toString();
+    }
+
+    public PreparedStatement prepare(Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(toSql());
+        setParameters(statement);
+        return statement;
     }
 
     private Collection<String> listColumns() {
@@ -131,5 +141,11 @@ public class SelectStatement {
             from.append(" ").append(aliasOf(table));
         }
         return from.toString();
+    }
+
+    private void setParameters(PreparedStatement query) throws SQLException {
+        for (int index = 0; index < parameters.size(); index++) {
+            JDBC.setParameter(query, index + 1, parameters.get(index));
+        }
     }
 }

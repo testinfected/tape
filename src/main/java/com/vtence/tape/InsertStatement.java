@@ -1,11 +1,16 @@
 package com.vtence.tape;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class InsertStatement {
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
+public class InsertStatement implements Statement {
     private final String table;
     private final List<String> columns = new ArrayList<>();
 
@@ -41,5 +46,9 @@ public class InsertStatement {
             parameters.add("?");
         }
         return parameters;
+    }
+
+    public PreparedStatement prepare(Connection connection) throws SQLException {
+        return connection.prepareStatement(toSql(), RETURN_GENERATED_KEYS);
     }
 }
