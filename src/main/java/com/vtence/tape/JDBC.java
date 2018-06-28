@@ -1,11 +1,6 @@
 package com.vtence.tape;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 
 public class JDBC {
 
@@ -38,7 +33,7 @@ public class JDBC {
         return time != null ? new java.util.Date(time.getTime()) : null;
     }
 
-    public static java.util.Date toJavaDate(Timestamp timestamp) throws SQLException {
+    public static java.util.Date toJavaDate(Timestamp timestamp)  {
         return timestamp != null ? new java.util.Date(timestamp.getTime()) : null;
     }
 

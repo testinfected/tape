@@ -1,38 +1,36 @@
 package com.vtence.tape;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 public abstract class AbstractDataSource implements DataSource {
 
-    public PrintWriter getLogWriter() throws SQLException {
+    public PrintWriter getLogWriter() {
         return new PrintWriter(new OutputStream() {
-            public void write(int b) throws IOException {
+            public void write(int b) {
             }
         });
     }
 
-    public void setLogWriter(PrintWriter out) throws SQLException {
+    public void setLogWriter(PrintWriter out) {
     }
 
-    public void setLoginTimeout(int seconds) throws SQLException {
+    public void setLoginTimeout(int seconds) {
     }
 
-    public int getLoginTimeout() throws SQLException {
+    public int getLoginTimeout() {
         return 0;
     }
 
-    public <T> T unwrap(Class<T> type) throws SQLException {
+    public <T> T unwrap(Class<T> type) {
         if (!isDataSource(type)) throw new IllegalArgumentException(type.getName());
         return type.cast(this);
     }
 
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) {
         return isDataSource(iface);
     }
 
