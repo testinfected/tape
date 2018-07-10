@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.1] - 2018-07-09
+
+### Changed
+
+- `Table` now exposes its schema, for situations where we want to extend an existing schema ([#22]) 
+  
 ## [1.2.0] - 2018-06-27
 
 ### Changed
@@ -86,6 +92,7 @@ Auto-generated columns are selected but not inserted nor updated ([#1])
 Initial public release
 
 
+[1.2.1]: https://github.com/testinfected/tape/compare/v1.2.1...v1.2.0
 [1.2.0]: https://github.com/testinfected/tape/compare/v1.2.0...v1.1.0
 [1.1.0]: https://github.com/testinfected/tape/compare/v1.1.0...v1.0.1
 [1.0.1]: https://github.com/testinfected/tape/compare/v1.0.1...v1.0.0
@@ -112,3 +119,4 @@ Initial public release
 [#19]: https://github.com/testinfected/tape/issues/19
 [#20]: https://github.com/testinfected/tape/issues/20
 [#21]: https://github.com/testinfected/tape/issues/21
+[#21]: https://github.com/testinfected/tape/issues/22
