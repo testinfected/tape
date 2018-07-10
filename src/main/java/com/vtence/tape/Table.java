@@ -16,6 +16,10 @@ public class Table<T> implements Record<T> {
         this.record = record;
     }
 
+    public TableSchema schema() {
+        return schema;
+    }
+
     public String name() {
         return schema.name();
     }
