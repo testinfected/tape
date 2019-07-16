@@ -14,10 +14,7 @@ import java.util.Optional;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.samePropertyValuesAs;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class InsertionTest {
@@ -43,25 +40,15 @@ public class InsertionTest {
         final Product original = aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog").build();
 
         transactor.perform(() -> {
-            int inserted = Insert.into(products, original)
-                                 .execute(connection);
-            assertThat("records inserted", inserted, is(1));
+            Product inserted = Insert.into(products, original)
+                                     .execute(connection);
+            assertThat("record inserted", inserted, not(nullValue()));
+            assertThat("generated id", idOf(inserted), not(nullValue()));
         });
 
         Product record = assertFound(Select.from(products)
                                            .first(connection));
         assertThat("inserted record", record, samePropertyValuesAs(original));
-    }
-
-    @Test public void
-    insertingAnEntityWillSetItsIdentifier() {
-        final Product entity = aProduct().build();
-        assertThat("orginal id", idOf(entity), nullValue());
-
-        transactor.perform(() -> Insert.into(products, entity)
-                                       .execute(executor));
-
-        assertThat("generated id", idOf(entity), not(nullValue()));
     }
 
     private Long idOf(Object entity) {

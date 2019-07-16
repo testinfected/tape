@@ -5,5 +5,6 @@ import java.sql.SQLException;
 
 @FunctionalInterface
 public interface KeyHandler<T> {
-    void handleKeys(ResultSet keys, T entity) throws SQLException;
+
+    T handleKeys(ResultSet keys, T entity) throws SQLException;
 }

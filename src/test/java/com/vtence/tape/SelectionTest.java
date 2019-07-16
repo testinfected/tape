@@ -2,12 +2,7 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.testmodel.CreditCardDetails;
-import com.vtence.tape.testmodel.Item;
-import com.vtence.tape.testmodel.LineItem;
-import com.vtence.tape.testmodel.Order;
-import com.vtence.tape.testmodel.PaymentMethod;
-import com.vtence.tape.testmodel.Product;
+import com.vtence.tape.testmodel.*;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
 import org.junit.After;
@@ -15,11 +10,7 @@ import org.junit.Test;
 
 import java.sql.Connection;
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.Access.idOf;
@@ -38,10 +29,8 @@ import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 
 public class SelectionTest {
 
@@ -251,8 +240,7 @@ public class SelectionTest {
     }
 
     private <T> T persist(final T entity) {
-        transactor.perform(() -> Insert.into(tableFor(entity), entity).execute(connection));
-        return entity;
+        return transactor.perform(() -> Insert.into(tableFor(entity), entity).execute(connection));
     }
 
     @SuppressWarnings("unchecked")

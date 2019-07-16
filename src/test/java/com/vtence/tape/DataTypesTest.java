@@ -2,17 +2,8 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.testmodel.Access;
-import com.vtence.tape.testmodel.CreditCardDetails;
-import com.vtence.tape.testmodel.Item;
-import com.vtence.tape.testmodel.Order;
-import com.vtence.tape.testmodel.PaymentMethod;
-import com.vtence.tape.testmodel.Product;
-import com.vtence.tape.testmodel.builders.CreditCardDetailsBuilder;
-import com.vtence.tape.testmodel.builders.DateBuilder;
-import com.vtence.tape.testmodel.builders.ItemBuilder;
-import com.vtence.tape.testmodel.builders.OrderBuilder;
-import com.vtence.tape.testmodel.builders.ProductBuilder;
+import com.vtence.tape.testmodel.*;
+import com.vtence.tape.testmodel.builders.*;
 import com.vtence.tape.testmodel.records.Schema;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
@@ -30,9 +21,7 @@ import static com.vtence.tape.testmodel.builders.DateBuilder.calendarDate;
 import static com.vtence.tape.testmodel.builders.ItemBuilder.anItem;
 import static com.vtence.tape.testmodel.builders.OrderBuilder.anOrder;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -79,14 +68,14 @@ public class DataTypesTest {
 
     @Test public void
     usingBooleanColumns() {
-        Item item = roundTrip(anItem().inStock());
+        Item item = roundTrip(anItem().of(persist(aProduct())).inStock());
 
         assertThat("in stock?", item.isInStock(), is(true));
     }
 
     @Test public void
     usingDecimalColumns() {
-        Item item = roundTrip(anItem().of(aProduct()).priced(new BigDecimal("649.99")));
+        Item item = roundTrip(anItem().of(persist(aProduct())).priced(new BigDecimal("649.99")));
 
         assertThat("price", item.getPrice(), equalTo(new BigDecimal("649.99")));
     }
@@ -162,7 +151,6 @@ public class DataTypesTest {
 
     private Item roundTrip(ItemBuilder builder) {
         Item item = builder.build();
-        persist(item.getProduct());
         persist(item);
         return assertFound(Select.from(items).join(products, "product_id = products.id").first(connection));
     }
@@ -179,20 +167,24 @@ public class DataTypesTest {
         return assertFound(Select.from(orders).first(connection));
     }
 
-    private void persist(final Product product) {
-        transactor.perform(() -> Insert.into(products, product).execute(connection));
+    private Product persist( ProductBuilder product) {
+        return persist(product.build());
     }
 
-    private void persist(final Item item) {
-        transactor.perform(() -> Insert.into(items, item).execute(connection));
+    private Product persist(final Product product) {
+        return transactor.perform(() -> Insert.into(products, product).execute(connection));
     }
 
-    private void persist(final CreditCardDetails card) {
-        transactor.perform(() -> Insert.into(payments, card).execute(connection));
+    private Item persist(final Item item) {
+        return transactor.perform(() -> Insert.into(items, item).execute(connection));
     }
 
-    private void persist(final Order order) {
-        transactor.perform(() -> Insert.into(orders, order).execute(connection));
+    private CreditCardDetails persist(final CreditCardDetails card) {
+        return transactor.perform(() -> Insert.into(payments, card).execute(connection));
+    }
+
+    private Order persist(final Order order) {
+        return transactor.perform(() -> Insert.into(orders, order).execute(connection));
     }
 
     private Long idOf(Object entity) {

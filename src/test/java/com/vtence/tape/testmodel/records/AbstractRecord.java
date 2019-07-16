@@ -8,8 +8,9 @@ import java.sql.SQLException;
 
 public abstract class AbstractRecord<T> implements Record<T> {
 
-    public void handleKeys(ResultSet keys, T entity) throws SQLException {
+    public T handleKeys(ResultSet keys, T entity) throws SQLException {
         Access.idOf(entity).set(generatedId(keys));
+        return entity;
     }
 
     private long generatedId(ResultSet rs) throws SQLException {

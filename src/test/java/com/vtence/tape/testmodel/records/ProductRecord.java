@@ -1,6 +1,7 @@
 package com.vtence.tape.testmodel.records;
 
 import com.vtence.tape.Column;
+import com.vtence.tape.Record;
 import com.vtence.tape.testmodel.Product;
 
 import java.sql.PreparedStatement;
@@ -9,7 +10,10 @@ import java.sql.SQLException;
 
 import static com.vtence.tape.testmodel.Access.idOf;
 
-public class ProductRecord extends AbstractRecord<Product> {
+/**
+ * An example of returning a new instance from {@link Record#handleKeys}
+ */
+public class ProductRecord implements Record<Product> {
 
     private final Column<Long> id;
     private final Column<String> number;
@@ -36,5 +40,12 @@ public class ProductRecord extends AbstractRecord<Product> {
         number.set(st, product.getNumber());
         name.set(st, product.getName());
         description.set(st, product.getDescription());
+    }
+
+    @Override
+    public Product handleKeys(ResultSet keys, Product entity) throws SQLException {
+        Product product = new Product(entity.getNumber(), entity.getName(), entity.getDescription());
+        idOf(product).set(keys.getLong(1));
+        return product;
     }
 }

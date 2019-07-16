@@ -14,9 +14,7 @@ import java.util.List;
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class DeletionTest {
@@ -83,8 +81,6 @@ public class DeletionTest {
     }
 
     private Product persist(final Product product) {
-        transactor.perform(() -> Insert.into(products, product).execute(connection));
-
-        return product;
+        return transactor.perform(() -> Insert.into(products, product).execute(connection));
     }
 }

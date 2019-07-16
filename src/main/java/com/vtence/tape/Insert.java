@@ -19,16 +19,15 @@ public class Insert<T> {
         this.statement = new InsertStatement(table.name(), table.columnNames(false));
     }
 
-    public int execute(StatementExecutor executor) {
+    public T execute(StatementExecutor executor) {
         return executor.execute(this::execute);
     }
 
-    public int execute(Connection connection) {
+    public T execute(Connection connection) {
         try (PreparedStatement insert = statement.prepare(connection)) {
             dehydrate(insert);
-            int rowsInserted = execute(insert);
-            handleKeys(insert);
-            return rowsInserted;
+            execute(insert);
+            return handleKeys(insert);
         } catch (SQLException e) {
             throw new JDBCException("Could not insert entity " + entity, e);
         }
@@ -42,7 +41,8 @@ public class Insert<T> {
         return insert.executeUpdate();
     }
 
-    private void handleKeys(PreparedStatement insert) throws SQLException {
-        into.handleKeys(insert.getGeneratedKeys(), entity);
+    @SuppressWarnings("unchecked")
+    private T handleKeys(PreparedStatement insert) throws SQLException {
+        return (T) into.handleKeys(insert.getGeneratedKeys(), entity);
     }
 }

@@ -4,16 +4,13 @@ import com.vtence.tape.testmodel.Product;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 
-import static com.vtence.tape.testmodel.Access.idOf;
-import static com.vtence.tape.testmodel.matchers.HasFieldWithValue.hasField;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 public class Products {
 
     public static Matcher<Product> sameProductAs(Product original) {
-        return allOf(hasField("id", equalTo(idOf(original).get())), samePropertyValuesAs(original));
+        return samePropertyValuesAs(original);
     }
 
     public static Matcher<? super Product> productNamed(String name) {

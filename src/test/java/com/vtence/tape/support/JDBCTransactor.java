@@ -13,13 +13,36 @@ public class JDBCTransactor {
         this.connection = connection;
     }
 
-    public void perform(UnitOfWork unitOfWork) {
+    public void perform(UnitOfWork work) {
         try {
-            unitOfWork.execute();
+            work.execute();
             connection.commit();
         } catch (SQLException e) {
             JDBC.rollback(connection);
-            throw new JDBCException("Could not commit transaction", e);
+            throw new JDBCException("Transaction failed", e);
+        } catch (Throwable e) {
+            JDBC.rollback(connection);
+            throw e;
+        }
+    }
+
+    public <T> T perform(QueryUnitOfWork<T> work) {
+        Query<T> query = new Query<>(work);
+        perform(query);
+        return query.result;
+    }
+
+    private static class Query<T> implements UnitOfWork {
+        private final QueryUnitOfWork<T> work;
+
+        private T result;
+
+        private Query(QueryUnitOfWork<T> work) {
+            this.work = work;
+        }
+
+        public void execute() {
+            result = work.execute();
         }
     }
 }

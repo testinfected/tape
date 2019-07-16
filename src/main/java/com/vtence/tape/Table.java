@@ -40,8 +40,7 @@ public class Table<T> implements Record<T> {
         record.dehydrate(statement, entity);
     }
 
-    public void handleKeys(ResultSet keys, T entity) throws SQLException {
-        if (keys.next())
-            record.handleKeys(keys, entity);
+    public T handleKeys(ResultSet keys, T entity) throws SQLException {
+        return keys.next() ? record.handleKeys(keys, entity) : entity;
     }
 }

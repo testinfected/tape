@@ -88,8 +88,7 @@ public class CountTest {
     }
 
     private <T> T persist(final T entity) {
-        transactor.perform(() -> Insert.into(tableFor(entity), entity).execute(connection));
-        return entity;
+        return transactor.perform(() -> Insert.into(tableFor(entity), entity).execute(connection));
     }
 
     @SuppressWarnings("unchecked")
