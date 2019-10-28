@@ -3,7 +3,12 @@ package com.vtence.tape;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
@@ -12,31 +17,33 @@ public class SelectStatement implements Statement {
     private final String table;
     private final String alias;
     private final Map<String, List<String>> columns = new HashMap<>();
+    private final List<Object> parameters = new ArrayList<>();
+
     private final List<String> joinTables = new ArrayList<>();
     private final StringBuilder joinClause = new StringBuilder();
     private final StringBuilder whereClause = new StringBuilder();
     private final StringBuilder orderByClause = new StringBuilder();
     private final StringBuilder limitClause = new StringBuilder();
 
-    private final List<Object> parameters = new ArrayList<>();
+    private boolean distinct;
 
-    public SelectStatement(String table, String as, String... columns) {
-        this(table, as, asList(columns));
+    public SelectStatement(String table, String alias, String... columns) {
+        this(table, alias, asList(columns));
     }
 
-    public SelectStatement(String table, String as, List<String> columns) {
+    public SelectStatement(String table, String alias, List<String> columns) {
         this.table = table;
-        this.alias = as;
-        this.columns.put(as, columns);
+        this.alias = alias;
+        this.columns.put(alias, columns);
     }
 
-    public void join(String joinType, String joinTable, String as, String joinCondition, String... columnsToSelect) {
-        join(joinType, joinTable, as, joinCondition, asList(columnsToSelect));
+    public void join(String joinType, String joinTable, String alias, String joinCondition, String... columnsToSelect) {
+        join(joinType, joinTable, alias, joinCondition, asList(columnsToSelect));
     }
 
-    public void join(String joinType, String joinTable, String as, String joinCondition, List<String> columnsToSelect) {
-        joinWith(as, columnsToSelect);
-        appendJoinClause(joinTable, as, joinType, joinCondition);
+    public void join(String joinType, String joinTable, String alias, String joinCondition, List<String> columnsToSelect) {
+        joinWith(alias, columnsToSelect);
+        appendJoinClause(joinTable, alias, joinType, joinCondition);
     }
 
     private void joinWith(String tableName, List<String> columnNames) {
@@ -44,13 +51,13 @@ public class SelectStatement implements Statement {
         columns.put(tableName, columnNames);
     }
 
-    private void appendJoinClause(String tableName, String as, String joinType, String joinCondition) {
+    private void appendJoinClause(String tableName, String alias, String joinType, String joinCondition) {
         joinClause.append(" ")
                   .append(joinType)
                   .append(" JOIN ")
                   .append(tableName)
                   .append(" AS ")
-                  .append(as)
+                  .append(alias)
                   .append(" ON ")
                   .append(joinCondition);
     }
@@ -73,6 +80,10 @@ public class SelectStatement implements Statement {
         limitClause.append(rowCount);
     }
 
+    public void distinct() {
+        this.distinct = true;
+    }
+
     public void addParameters(Object... parameters) {
         this.parameters.addAll(asList(parameters));
     }
@@ -91,6 +102,7 @@ public class SelectStatement implements Statement {
     private String selectClause() {
         StringBuilder clause = new StringBuilder();
         clause.append("SELECT ");
+        if (distinct) clause.append("DISTINCT ");
         for (Iterator<String> it = listColumns().iterator(); it.hasNext(); ) {
             clause.append(it.next());
             if (it.hasNext()) clause.append(", ");

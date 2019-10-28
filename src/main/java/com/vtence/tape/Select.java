@@ -16,21 +16,31 @@ public class Select<T> {
     private final Table<? extends T> from;
     private final SelectStatement statement;
 
-    public static <T> Select<T> from(final Table<? extends T> table) {
+    public static <T> Select<T> from(Table<? extends T> table) {
         return new Select<>(table);
     }
 
-    public static <T> Select<T> from(final Table<? extends T> table, String alias) {
-        return new Select<>(table, alias);
+    public static <T> Select<T> from(Table<? extends T> table, String as) {
+        return new Select<>(table, as);
+    }
+
+    public static <T> Select<T> distinct(Table<? extends T> from) {
+        return distinct(from, from.name());
+    }
+
+    public static <T> Select<T> distinct(Table<? extends T> from, String as) {
+        Select<T> select = new Select<>(from, as);
+        select.distinct();
+        return select;
     }
 
     public Select(Table<? extends T> from) {
         this(from, from.name());
     }
 
-    public Select(Table<? extends T> from, String alias) {
+    public Select(Table<? extends T> from, String as) {
         this.from = from;
-        this.statement = new SelectStatement(from.name(), alias, from.columnNames(true));
+        this.statement = new SelectStatement(from.name(), as, from.columnNames(true));
     }
 
     public Select<T> join(Table<?> other, String condition) {
@@ -41,12 +51,12 @@ public class Select<T> {
         return join(other, other.name(), condition, select);
     }
 
-    public Select<T> join(Table<?> other, String alias, String condition) {
-        return join(other, alias, condition, false);
+    public Select<T> join(Table<?> other, String as, String condition) {
+        return join(other, as, condition, false);
     }
 
-    public Select<T> join(Table<?> other, String alias, String condition, boolean select) {
-        return join(other, alias, "INNER", condition, select);
+    public Select<T> join(Table<?> other, String as, String condition, boolean select) {
+        return join(other, as, "INNER", condition, select);
     }
 
     public Select<T> leftJoin(Table<?> table, String condition) {
@@ -57,16 +67,16 @@ public class Select<T> {
         return leftJoin(table, table.name(), condition, select);
     }
 
-    public Select<T> leftJoin(Table<?> other, String alias, String condition) {
-        return leftJoin(other, alias, condition, false);
+    public Select<T> leftJoin(Table<?> other, String as, String condition) {
+        return leftJoin(other, as, condition, false);
     }
 
-    public Select<T> leftJoin(Table<?> other, String alias, String condition, boolean select) {
-        return join(other, alias, "LEFT", condition, select);
+    public Select<T> leftJoin(Table<?> other, String as, String condition, boolean select) {
+        return join(other, as, "LEFT", condition, select);
     }
 
-    private Select<T> join(Table<?> other, String alias, String type, String condition, boolean select) {
-        statement.join(type, other.name(), alias, condition, select ? other.columnNames(true) : emptyList());
+    private Select<T> join(Table<?> other, String as, String type, String condition, boolean select) {
+        statement.join(type, other.name(), as, condition, select ? other.columnNames(true) : emptyList());
         return this;
     }
 
@@ -79,6 +89,10 @@ public class Select<T> {
     public Select<T> orderBy(String expression) {
         statement.orderBy(expression);
         return this;
+    }
+
+    public void distinct() {
+        statement.distinct();
     }
 
     public Optional<T> first(StatementExecutor executor) {

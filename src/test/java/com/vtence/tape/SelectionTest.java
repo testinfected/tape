@@ -266,6 +266,21 @@ public class SelectionTest {
                 lineWithItemNumber("00000001")));
     }
 
+    @Test
+    public void
+    selectingOnlyDistinctRecords() {
+        Product singleProduct = persist(aProduct().withNumber("00000001"));
+        persist(anItem().withNumber("1").of(singleProduct));
+        persist(anItem().withNumber("2").of(singleProduct));
+        persist(anItem().withNumber("3").of(persist(aProduct().withNumber("00000002"))));
+        persist(anItem().withNumber("4").of(persist(aProduct().withNumber("00000003"))));
+
+        List<Product> distinct = Select.distinct(products)
+                                       .join(items, "items.product_id = products.id")
+                                       .list(connection);
+        assertThat("distinct products", distinct, hasSize(3));
+    }
+
     private <T> T assertFound(Optional<T> record) {
         assertThat("found", record.isPresent(), is(true));
         return record.get();

@@ -96,4 +96,12 @@ public class SelectStatementTest {
                 "INNER JOIN other AS o ON o.id = t.other_id " +
                 "WHERE a = ? ORDER BY a ASC LIMIT 1"));
     }
+
+    @Test public void
+    supportsDistinctClause() {
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
+        select.distinct();
+
+        assertThat("sql", select.toSql(), equalTo("SELECT DISTINCT t.a, t.b, t.c FROM table AS t"));
+    }
 }
