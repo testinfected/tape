@@ -281,6 +281,37 @@ public class SelectionTest {
         assertThat("distinct products", distinct, hasSize(3));
     }
 
+    @Test
+    public void
+    countingTheNumberOfRecords() {
+        persist(
+                aProduct().withNumber("00000001"),
+                aProduct().withNumber("00000002"),
+                aProduct().withNumber("00000003"),
+                aProduct().withNumber("00000004"),
+                aProduct().withNumber("00000005")
+        );
+
+        int count = Select.from(products)
+                          .count(connection);
+        assertThat("total products", count, is(5));
+    }
+
+    @Test
+    public void
+    countingOnlyDistinctRecords() {
+        Product singleProduct = persist(aProduct().withNumber("00000001"));
+        persist(anItem().withNumber("1").of(singleProduct));
+        persist(anItem().withNumber("2").of(singleProduct));
+        persist(anItem().withNumber("3").of(persist(aProduct().withNumber("00000002"))));
+        persist(anItem().withNumber("4").of(persist(aProduct().withNumber("00000003"))));
+
+        int count = Select.distinct(products)
+                          .join(items, "items.product_id = products.id")
+                          .count(connection);
+        assertThat("distinct products", count, is(3));
+    }
+
     private <T> T assertFound(Optional<T> record) {
         assertThat("found", record.isPresent(), is(true));
         return record.get();

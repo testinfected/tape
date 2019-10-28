@@ -26,6 +26,7 @@ public class SelectStatement implements Statement {
     private final StringBuilder limitClause = new StringBuilder();
 
     private boolean distinct;
+    private boolean count;
 
     public SelectStatement(String table, String alias, String... columns) {
         this(table, alias, asList(columns));
@@ -84,6 +85,10 @@ public class SelectStatement implements Statement {
         this.distinct = true;
     }
 
+    public void count() {
+        this.count = true;
+    }
+
     public void addParameters(Object... parameters) {
         this.parameters.addAll(asList(parameters));
     }
@@ -102,12 +107,23 @@ public class SelectStatement implements Statement {
     private String selectClause() {
         StringBuilder clause = new StringBuilder();
         clause.append("SELECT ");
+        if (count) clause.append("COUNT(");
         if (distinct) clause.append("DISTINCT ");
-        for (Iterator<String> it = listColumns().iterator(); it.hasNext(); ) {
-            clause.append(it.next());
-            if (it.hasNext()) clause.append(", ");
-        }
+        clause.append(columnsSelection());
+        if (count) clause.append(")");
         return clause.toString();
+    }
+
+    private String columnsSelection() {
+        StringBuilder selection = new StringBuilder();
+        Collection<String> columns = listColumns();
+        if (count && columns.size() > 1) selection.append("(");
+        for (Iterator<String> it = columns.iterator(); it.hasNext(); ) {
+            selection.append(it.next());
+            if (it.hasNext()) selection.append(", ");
+        }
+        if (count && columns.size() > 1) selection.append(")");
+        return selection.toString();
     }
 
     public PreparedStatement prepare(Connection connection) throws SQLException {

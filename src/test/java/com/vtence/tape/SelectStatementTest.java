@@ -104,4 +104,29 @@ public class SelectStatementTest {
 
         assertThat("sql", select.toSql(), equalTo("SELECT DISTINCT t.a, t.b, t.c FROM table AS t"));
     }
+
+    @Test public void
+    supportsCountingInsteadOfSelecting() {
+        SelectStatement select = new SelectStatement("table", "t", "*");
+        select.count();
+
+        assertThat("sql", select.toSql(), equalTo("SELECT COUNT(t.*) FROM table AS t"));
+    }
+
+    @Test public void
+    countingOnMultipleColumns() {
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
+        select.count();
+
+        assertThat("sql", select.toSql(), equalTo("SELECT COUNT((t.a, t.b, t.c)) FROM table AS t"));
+    }
+
+    @Test public void
+    combiningDistinctAndCount() {
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
+        select.distinct();
+        select.count();
+
+        assertThat("sql", select.toSql(), equalTo("SELECT COUNT(DISTINCT (t.a, t.b, t.c)) FROM table AS t"));
+    }
 }

@@ -129,6 +129,22 @@ public class Select<T> {
         }
     }
 
+    public int count(StatementExecutor executor) {
+        return executor.execute(this::count);
+    }
+
+    public int count(Connection connection) {
+        statement.count();
+
+        try (PreparedStatement query = statement.prepare(connection)) {
+            ResultSet rs = execute(query);
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new JDBCException("Could not execute query", e);
+        }
+    }
+
     private T hydrate(ResultSet rs) throws SQLException {
         return from.hydrate(rs);
     }
