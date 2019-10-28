@@ -164,7 +164,7 @@ public class DataTypesTest {
         Item item = builder.build();
         persist(item);
         return assertFound(Select.from(items)
-                                 .join(products, "product_id = products.id")
+                                 .join(products, "product_id = products.id", true)
                                  .first(connection));
     }
 

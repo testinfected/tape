@@ -159,6 +159,31 @@ public class SelectionTest {
 
     @Test
     public void
+    joiningWithAnotherTable() {
+        persist(a(persist(aProduct().named("Boxer").withNumber("BOXER"))).priced("1199.00"));
+        persist(aProduct().named("Bulldog").withNumber("BULLDOG"));
+
+        List<Product> inventory = Select.from(products)
+                                        .join(items, "items.product_id = products.id")
+                                        .list(connection);
+        assertThat("selection", inventory, contains(productNamed("Boxer")));
+    }
+
+    @Test
+    public void
+    leftJoiningWithAnotherTable() {
+        persist(a(persist(aProduct().named("Boxer").withNumber("BOXER"))).priced("1199.00"));
+        persist(aProduct().named("Bulldog").withNumber("BULLDOG"));
+
+        List<Product> inventory = Select.from(products)
+                                        .leftJoin(items, "items.product_id = products.id")
+                                        .where("items.number IS NOT NULL ")
+                                        .list(connection);
+        assertThat("selection", inventory, contains(productNamed("Boxer")));
+    }
+
+    @Test
+    public void
     queryingDataFromMultipleTables() {
         Product boxer = persist(aProduct().named("Boxer").withNumber("BOXER"));
         persist(a(boxer).priced("1199.00"));
@@ -167,7 +192,8 @@ public class SelectionTest {
         persist(a(bulldog).priced("699.00"));
 
         List<Item> selection = Select.from(items)
-                                     .join(products, "items.product_id = products.id")
+                                     .join(products, "items.product_id = products.id", true)
+                                     .join(products, "p2", "items.product_id = p2.id", true)
                                      .where("products.name = ?", "Bulldog")
                                      .list(connection);
         assertThat("selection", selection, hasSize(2));
@@ -181,7 +207,7 @@ public class SelectionTest {
         persist(a(bulldog).priced("899.00"));
 
         Item selection = assertFound(Select.from(items, "i")
-                                           .join(products, "p", "i.product_id = p.id")
+                                           .join(products, "p", "i.product_id = p.id", true)
                                            .where("p.name = ?", "Bulldog")
                                            .first(connection));
         assertThat("selection", selection, itemWithProductNumber("BULLDOG"));
@@ -189,7 +215,7 @@ public class SelectionTest {
 
     @Test
     public void
-    queryingDataFromMultipleTablesDataThatMightOnlyExistInTheFirstTable() {
+    queryingDataFromMultipleTablesThatMightOnlyExistInTheFirstTable() {
         persist(
                 anOrder().withNumber("00000001"),
                 anOrder().withNumber("10000001"),
@@ -197,7 +223,7 @@ public class SelectionTest {
                          .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
 
         List<Order> selection = Select.from(orders)
-                                      .leftJoin(payments, "orders.payment_id = payments.id")
+                                      .leftJoin(payments, "orders.payment_id = payments.id", true)
                                       .where("orders.number LIKE ?", "1000%")
                                       .list(connection);
         assertThat("selection", selection, hasSize(2));
@@ -211,7 +237,7 @@ public class SelectionTest {
                          .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
 
         Order selection = assertFound(Select.from(orders, "o")
-                                            .leftJoin(payments, "p", "o.payment_id = p.id")
+                                            .leftJoin(payments, "p", "o.payment_id = p.id", true)
                                             .where("o.number LIKE ?", "1000%")
                                             .first(connection));
         assertThat("selection", selection, orderWithNumber(startsWith("1000")));

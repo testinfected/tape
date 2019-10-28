@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
+
 public class Select<T> {
 
     private final Table<? extends T> from;
@@ -35,17 +37,36 @@ public class Select<T> {
         return join(other, other.name(), condition);
     }
 
+    public Select<T> join(Table<?> other, String condition, boolean select) {
+        return join(other, other.name(), condition, select);
+    }
+
     public Select<T> join(Table<?> other, String alias, String condition) {
-        statement.join("INNER", other.name(), alias, condition, other.columnNames(true));
-        return this;
+        return join(other, alias, condition, false);
+    }
+
+    public Select<T> join(Table<?> other, String alias, String condition, boolean select) {
+        return join(other, alias, "INNER", condition, select);
     }
 
     public Select<T> leftJoin(Table<?> table, String condition) {
-        return leftJoin(table, table.name(), condition);
+        return leftJoin(table, table.name(), condition, false);
+    }
+
+    public Select<T> leftJoin(Table<?> table, String condition, boolean select) {
+        return leftJoin(table, table.name(), condition, select);
     }
 
     public Select<T> leftJoin(Table<?> other, String alias, String condition) {
-        statement.join("LEFT", other.name(), alias, condition, other.columnNames(true));
+        return leftJoin(other, alias, condition, false);
+    }
+
+    public Select<T> leftJoin(Table<?> other, String alias, String condition, boolean select) {
+        return join(other, alias, "LEFT", condition, select);
+    }
+
+    private Select<T> join(Table<?> other, String alias, String type, String condition, boolean select) {
+        statement.join(type, other.name(), alias, condition, select ? other.columnNames(true) : emptyList());
         return this;
     }
 
