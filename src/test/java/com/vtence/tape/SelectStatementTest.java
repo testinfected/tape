@@ -9,91 +9,91 @@ public class SelectStatementTest {
 
     @Test public void
     selectsSpecifiedColumnsFromTargetTable() {
-        SelectStatement select = new SelectStatement("table", "a", "b", "c");
-        assertThat("sql", select.toSql(), equalTo("select a, b, c from table"));
-    }
-
-    @Test public void
-    columnNamesArePrefixedWithTableAliasWhenGiven() {
-        SelectStatement select = new SelectStatement("table", "a", "b", "c");
-        select.aliasTableName("table", "t");
-
-        assertThat("sql", select.toSql(), equalTo("select t.a, t.b, t.c from table t"));
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
+        assertThat("using fully qualified column names", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t"));
     }
 
     @Test public void
     supportsWhereConditions() {
-        SelectStatement select = new SelectStatement("table", "a", "b", "c");
-        select.where("a = ? and b = ?");
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
+        select.where("a = ? AND b = ?");
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c from table where a = ? and b = ?"));
+        assertThat("sql", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t WHERE a = ? AND b = ?"));
     }
 
     @Test public void
     supportsOrderByExpressions() {
-        SelectStatement select = new SelectStatement("table", "a", "b", "c");
-        select.orderBy("id desc");
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
+        select.orderBy("id DESC");
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c from table order by id desc"));
+        assertThat("sql", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t ORDER BY id DESC"));
     }
 
     @Test public void
     supportsShorthandForSelectingAllColumnsFromATable() {
-        SelectStatement select = new SelectStatement("table", "*");
+        SelectStatement select = new SelectStatement("table", "t", "*");
 
-        assertThat("sql", select.toSql(), equalTo("select * from table"));
+        assertThat("sql", select.toSql(), equalTo("SELECT t.* FROM table AS t"));
     }
 
     @Test public void
     supportsJoinConditions() {
-        SelectStatement select = new SelectStatement("this", "a", "b", "c");
-        select.join("left outer", "other", "other.id = this.other_id", "d", "e", "f");
+        SelectStatement select = new SelectStatement("this", "t", "a", "b", "c");
+        select.join("LEFT OUTER", "other", "o", "o.id = t.other_id", "d", "e", "f");
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c, d, e, f from this left outer join other on other.id = this.other_id"));
+        assertThat("sql", select.toSql(), equalTo(
+                "SELECT t.a, t.b, t.c, o.d, o.e, o.f FROM this AS t " +
+                "LEFT OUTER JOIN other AS o ON o.id = t.other_id"));
     }
 
     @Test public void
     supportsLimitsConditions() {
-        SelectStatement select = new SelectStatement("table", "a", "b", "c");
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
         select.limit(1);
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c from table limit 1"));
+        assertThat("sql", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t LIMIT 1"));
     }
 
     @Test public void
     supportsOffsetInLimits() {
-        SelectStatement select = new SelectStatement("table", "a", "b", "c");
+        SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
         select.limit(3, 5);
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c from table limit 3, 5"));
+        assertThat("sql", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t LIMIT 3, 5"));
     }
 
     @Test public void
     usingAShorthandToSelectAllColumnsWillWorkWithAJoinToo() {
-        SelectStatement select = new SelectStatement("this", "*");
-        select.join("inner", "other", "other.id = this.other_id");
+        SelectStatement select = new SelectStatement("this", "this", "*");
+        select.join("INNER", "other", "other", "other.id = this.other_id", "*");
 
-        assertThat("sql", select.toSql(), equalTo("select * from this inner join other on other.id = this.other_id"));
+        assertThat("sql", select.toSql(), equalTo(
+                "SELECT this.*, other.* FROM this AS this INNER JOIN other AS other ON other.id = this.other_id"));
     }
 
     @Test public void
-    joinTableNamesCanBeAliasedAsWell() {
-        SelectStatement select = new SelectStatement("this", "a");
-        select.aliasTableName("this", "t");
-        select.aliasTableName("other", "o");
-        select.join("inner", "other", "o.id = t.other_id", "b");
+    joinTablesCanAppearMultipleTime() {
+        SelectStatement select = new SelectStatement("this", "t", "a");
+        select.join("INNER", "other", "o1", "o1.id = t.other_id", "b");
+        select.join("INNER", "other", "o2", "o2.id = t.other_id", "b");
 
-        assertThat("sql", select.toSql(), equalTo("select t.a, o.b from this t inner join other o on o.id = t.other_id"));
+        assertThat("sql", select.toSql(), equalTo(
+                "SELECT t.a, o1.b, o2.b FROM this AS t " +
+                "INNER JOIN other AS o1 ON o1.id = t.other_id " +
+                "INNER JOIN other AS o2 ON o2.id = t.other_id"));
     }
 
     @Test public void
     appliesClausesInCorrectOrder() {
-        SelectStatement select = new SelectStatement("this", "a");
+        SelectStatement select = new SelectStatement("this", "t", "a");
         select.where("a = ?");
-        select.join("inner", "other", "other.id = this.other_id", "b", "c");
-        select.orderBy("a asc");
+        select.join("INNER", "other", "o", "o.id = t.other_id", "b", "c");
+        select.orderBy("a ASC");
         select.limit(1);
 
-        assertThat("sql", select.toSql(), equalTo("select a, b, c from this inner join other on other.id = this.other_id where a = ? order by a asc limit 1"));
+        assertThat("sql", select.toSql(), equalTo(
+                "SELECT t.a, o.b, o.c FROM this AS t " +
+                "INNER JOIN other AS o ON o.id = t.other_id " +
+                "WHERE a = ? ORDER BY a ASC LIMIT 1"));
     }
 }

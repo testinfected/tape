@@ -2,8 +2,17 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.testmodel.*;
-import com.vtence.tape.testmodel.builders.*;
+import com.vtence.tape.testmodel.Access;
+import com.vtence.tape.testmodel.CreditCardDetails;
+import com.vtence.tape.testmodel.Item;
+import com.vtence.tape.testmodel.Order;
+import com.vtence.tape.testmodel.PaymentMethod;
+import com.vtence.tape.testmodel.Product;
+import com.vtence.tape.testmodel.builders.CreditCardDetailsBuilder;
+import com.vtence.tape.testmodel.builders.DateBuilder;
+import com.vtence.tape.testmodel.builders.ItemBuilder;
+import com.vtence.tape.testmodel.builders.OrderBuilder;
+import com.vtence.tape.testmodel.builders.ProductBuilder;
 import com.vtence.tape.testmodel.records.Schema;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
@@ -21,7 +30,9 @@ import static com.vtence.tape.testmodel.builders.DateBuilder.calendarDate;
 import static com.vtence.tape.testmodel.builders.ItemBuilder.anItem;
 import static com.vtence.tape.testmodel.builders.OrderBuilder.anOrder;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -152,7 +163,9 @@ public class DataTypesTest {
     private Item roundTrip(ItemBuilder builder) {
         Item item = builder.build();
         persist(item);
-        return assertFound(Select.from(items).join(products, "product_id = products.id").first(connection));
+        return assertFound(Select.from(items)
+                                 .join(products, "product_id = products.id")
+                                 .first(connection));
     }
 
     private CreditCardDetails roundTrip(CreditCardDetailsBuilder builder) {

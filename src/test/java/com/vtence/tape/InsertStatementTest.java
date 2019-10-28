@@ -10,6 +10,6 @@ public class InsertStatementTest {
     @Test public void
     insertsSpecifiedColumnsInTargetTable() {
         InsertStatement insert = new InsertStatement("table", "a", "b", "c");
-        assertThat("sql", insert.toSql(), equalTo("insert into table(a, b, c) values(?, ?, ?)"));
+        assertThat("sql", insert.toSql(), equalTo("INSERT INTO table(a, b, c) VALUES(?, ?, ?)"));
     }
 }

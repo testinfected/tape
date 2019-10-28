@@ -10,14 +10,14 @@ public class UpdateStatementTest {
     @Test public void
     updatesSpecifiedColumnsInTargetTable() {
         UpdateStatement update = new UpdateStatement("table", "a", "b", "c");
-        assertThat("sql", update.toSql(), equalTo("update table set a = ?, b = ?, c = ?"));
+        assertThat("sql", update.toSql(), equalTo("UPDATE table SET a = ?, b = ?, c = ?"));
     }
 
     @Test public void
     supportsWhereConditions() {
         UpdateStatement update = new UpdateStatement("table", "a", "b", "c");
-        update.where("a = ? and b = ?");
+        update.where("a = ? AND b = ?");
 
-        assertThat("sql", update.toSql(), equalTo("update table set a = ?, b = ?, c = ? where a = ? and b = ?"));
+        assertThat("sql", update.toSql(), equalTo("UPDATE table SET a = ?, b = ?, c = ? WHERE a = ? AND b = ?"));
     }
 }

@@ -10,14 +10,14 @@ public class DeleteStatementTest {
     @Test public void
     deletesFromSpecifiedTable() {
         DeleteStatement delete = new DeleteStatement("table");
-        assertThat("sql", delete.toSql(), equalTo("delete from table"));
+        assertThat("sql", delete.toSql(), equalTo("DELETE FROM table"));
     }
 
     @Test public void
     supportsWhereConditions() {
         DeleteStatement delete = new DeleteStatement("table");
-        delete.where("a = ? and b = ?");
+        delete.where("a = ? AND b = ?");
 
-        assertThat("sql", delete.toSql(), equalTo("delete from table where a = ? and b = ?"));
+        assertThat("sql", delete.toSql(), equalTo("DELETE FROM table WHERE a = ? AND b = ?"));
     }
 }

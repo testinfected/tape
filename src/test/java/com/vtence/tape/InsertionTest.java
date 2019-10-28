@@ -5,7 +5,6 @@ import com.vtence.tape.support.JDBCTransactor;
 import com.vtence.tape.testmodel.Access;
 import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.records.Schema;
-import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Test;
 
@@ -14,7 +13,10 @@ import java.util.Optional;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
 public class InsertionTest {
@@ -37,7 +39,9 @@ public class InsertionTest {
 
     @Test public void
     insertingANewRecord() {
-        final Product original = aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog").build();
+        final Product original = aProduct().withNumber("12345678")
+                                           .named("English Bulldog")
+                                           .describedAs("A muscular heavy dog").build();
 
         transactor.perform(() -> {
             Product inserted = Insert.into(products, original)
@@ -56,7 +60,7 @@ public class InsertionTest {
     }
 
     private <T> T assertFound(Optional<T> record) {
-        assertThat("found", record.isPresent(), CoreMatchers.is(true));
+        assertThat("found", record.isPresent(), is(true));
         return record.get();
     }
 }

@@ -25,9 +25,9 @@ public class InsertStatement implements Statement {
 
     public String toSql() {
         StringBuilder sql = new StringBuilder();
-        sql.append("insert into ").append(table);
+        sql.append("INSERT INTO ").append(table);
         sql.append("(").append(asString(columns)).append(")");
-        sql.append(" values(").append(asString(parametersFor(columns))).append(")");
+        sql.append(" VALUES(").append(asString(parametersFor(columns))).append(")");
         return sql.toString();
     }
 

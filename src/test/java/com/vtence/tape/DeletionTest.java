@@ -14,7 +14,9 @@ import java.util.List;
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.builders.ProductBuilder.aProduct;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class DeletionTest {
@@ -67,7 +69,8 @@ public class DeletionTest {
 
         List<Product> records = Select.from(products)
                                       .list(connection);
-        assertThat("records left", records, containsInAnyOrder(productNamed("Labrador Retriever"), productNamed("Dalmatian")));
+        assertThat("records left", records, containsInAnyOrder(productNamed("Labrador Retriever"),
+                                                               productNamed("Dalmatian")));
     }
 
     private void persist(final Builder<Product>... products) {

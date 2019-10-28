@@ -19,12 +19,12 @@ public class CountStatement implements Statement {
     }
 
     public void where(String conditions) {
-        whereClause.append(" where ").append(conditions);
+        whereClause.append(" WHERE ").append(conditions);
     }
 
     public String toSql() {
         StringBuilder sql = new StringBuilder();
-        sql.append("select count(*) from ")
+        sql.append("SELECT COUNT(*) FROM ")
            .append(table)
            .append(whereClause);
         return sql.toString();

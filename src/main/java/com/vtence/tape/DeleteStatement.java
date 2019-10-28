@@ -19,7 +19,7 @@ public class DeleteStatement implements Statement {
     }
 
     public void where(String clause) {
-        this.whereClause.append(" where ").append(clause);
+        this.whereClause.append(" WHERE ").append(clause);
     }
 
     public void addParameters(Object... parameters) {
@@ -27,7 +27,7 @@ public class DeleteStatement implements Statement {
     }
 
     public String toSql() {
-        StringBuilder sql = new StringBuilder("delete from ");
+        StringBuilder sql = new StringBuilder("DELETE FROM ");
         sql.append(table);
         sql.append(whereClause);
         return sql.toString();

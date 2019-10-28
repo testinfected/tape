@@ -66,7 +66,7 @@ public class CountTest {
                 aProduct().named("Black Labrador"));
 
         int count = Count.from(products)
-                         .where("name like ?", "% Labrador")
+                         .where("name LIKE ?", "% Labrador")
                          .execute(executor);
         assertThat("labradors count", count, is(3));
     }

@@ -52,19 +52,19 @@ public class Column<T> {
         ResultSetMetaData metaData = rs.getMetaData();
 
         for (int index = 1; index <= metaData.getColumnCount(); index++) {
-            if (matchesColumn(metaData, index) && matchesTable(metaData, index))
+            if (matchesColumn(metaData.getColumnName(index)) && matchesTable(metaData.getTableName(index)))
                 return index;
         }
 
         throw new SQLException("Result set has no column '" + name + "'");
     }
 
-    private boolean matchesTable(ResultSetMetaData metaData, int index) throws SQLException {
-        return metaData.getTableName(index).equalsIgnoreCase(table.name());
+    private boolean matchesTable(String tableName) {
+        return tableName.equalsIgnoreCase(table.name());
     }
 
-    private boolean matchesColumn(ResultSetMetaData metaData, int index) throws SQLException {
-        return metaData.getColumnName(index).equalsIgnoreCase(name);
+    private boolean matchesColumn(String columnName) {
+        return columnName.equalsIgnoreCase(name);
     }
 
     public interface Type<T> {

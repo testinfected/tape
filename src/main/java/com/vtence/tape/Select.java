@@ -28,13 +28,7 @@ public class Select<T> {
 
     public Select(Table<? extends T> from, String alias) {
         this.from = from;
-        this.statement = new SelectStatement(from.name(), from.columnNames(true));
-        alias(from, alias);
-    }
-
-    private Select<T> alias(Table<?> table, String alias) {
-        statement.aliasTableName(table.name(), alias);
-        return this;
+        this.statement = new SelectStatement(from.name(), alias, from.columnNames(true));
     }
 
     public Select<T> join(Table<?> other, String condition) {
@@ -42,8 +36,7 @@ public class Select<T> {
     }
 
     public Select<T> join(Table<?> other, String alias, String condition) {
-        alias(other, alias);
-        statement.join("inner", other.name(), condition, other.columnNames(true));
+        statement.join("INNER", other.name(), alias, condition, other.columnNames(true));
         return this;
     }
 
@@ -52,8 +45,7 @@ public class Select<T> {
     }
 
     public Select<T> leftJoin(Table<?> other, String alias, String condition) {
-        alias(other, alias);
-        statement.join("left", other.name(), condition, other.columnNames(true));
+        statement.join("LEFT", other.name(), alias, condition, other.columnNames(true));
         return this;
     }
 

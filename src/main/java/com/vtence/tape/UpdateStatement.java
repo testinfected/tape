@@ -25,7 +25,7 @@ public class UpdateStatement implements Statement {
     }
 
     public void where(String clause) {
-        whereClause.append(" where ").append(clause);
+        whereClause.append(" WHERE ").append(clause);
     }
 
     public void addParameters(Object... parameters) {
@@ -34,7 +34,7 @@ public class UpdateStatement implements Statement {
 
     public String toSql() {
         StringBuilder sql = new StringBuilder();
-        sql.append("update ").append(table).append(" set ");
+        sql.append("UPDATE ").append(table).append(" SET ");
         for (Iterator<?> it = columns.iterator(); it.hasNext(); ) {
             sql.append(it.next()).append(" = ?");
             if (it.hasNext()) sql.append(", ");

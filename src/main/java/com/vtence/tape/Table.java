@@ -32,8 +32,8 @@ public class Table<T> implements Record<T> {
         return names;
     }
 
-    public T hydrate(ResultSet resultSet) throws SQLException {
-        return record.hydrate(resultSet);
+    public T hydrate(ResultSet rs) throws SQLException {
+        return record.hydrate(rs);
     }
 
     public void dehydrate(PreparedStatement statement, T entity) throws SQLException {

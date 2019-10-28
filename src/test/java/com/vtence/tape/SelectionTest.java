@@ -2,15 +2,23 @@ package com.vtence.tape;
 
 import com.vtence.tape.support.Database;
 import com.vtence.tape.support.JDBCTransactor;
-import com.vtence.tape.testmodel.*;
+import com.vtence.tape.testmodel.CreditCardDetails;
+import com.vtence.tape.testmodel.Item;
+import com.vtence.tape.testmodel.LineItem;
+import com.vtence.tape.testmodel.Order;
+import com.vtence.tape.testmodel.PaymentMethod;
+import com.vtence.tape.testmodel.Product;
 import com.vtence.tape.testmodel.builders.Builder;
 import com.vtence.tape.testmodel.records.Schema;
 import org.junit.After;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.text.ParseException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.vtence.tape.support.TestEnvironment.memory;
 import static com.vtence.tape.testmodel.Access.idOf;
@@ -29,8 +37,10 @@ import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 
 public class SelectionTest {
 
@@ -62,7 +72,9 @@ public class SelectionTest {
     @Test
     public void
     retrievingASingleRecordWithAllColumns() {
-        Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
+        Product original = persist(aProduct().withNumber("12345678")
+                                             .named("English Bulldog")
+                                             .describedAs("A muscular heavy dog"));
 
         Product record = assertFound(Select.from(products)
                                            .first(connection));
@@ -74,7 +86,9 @@ public class SelectionTest {
     @Test
     public void
     selectingAllRecordsFromATable() {
-        persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
+        persist(aProduct().named("Bulldog"),
+                aProduct().named("Dalmatian"),
+                aProduct().named("Labrador"));
 
         Collection<Product> selection = Select.from(products)
                                               .list(connection);
@@ -89,7 +103,9 @@ public class SelectionTest {
     @Test
     public void
     selectingTheFirstInACollectionOfRecords() {
-        persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
+        persist(aProduct().named("Bulldog"),
+                aProduct().named("Dalmatian"),
+                aProduct().named("Labrador"));
 
         Product selection = assertFound(Select.from(products)
                                               // use an executor rather than a connection this time
@@ -100,7 +116,9 @@ public class SelectionTest {
     @Test
     public void
     selectingOnlyThoseRecordsThatFulfillASpecifiedCriterion() {
-        persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
+        persist(aProduct().named("Bulldog"),
+                aProduct().named("Dalmatian"),
+                aProduct().named("Labrador"));
 
         Product selection = assertFound(Select.from(products)
                                               .where("name = ?", "Labrador")
@@ -110,7 +128,6 @@ public class SelectionTest {
         assertThat("selection", selection, is(productNamed("Labrador")));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     extractingRecordsBasedOnMultipleCriteria() {
@@ -119,7 +136,7 @@ public class SelectionTest {
                 aProduct().named("Labrador Retriever").describedAs("male"));
 
         Product selection = assertFound(Select.from(products)
-                                              .where("name like ? and description = ?", "%Bulldog", "male")
+                                              .where("name LIKE ? AND description = ?", "%Bulldog", "male")
                                               // streaming can be done with an executor too ...
                                               .stream(executor)
                                               .findFirst());
@@ -129,7 +146,9 @@ public class SelectionTest {
     @Test
     public void
     aliasingTheTableName() {
-        persist(aProduct().named("Bulldog"), aProduct().named("Dalmatian"), aProduct().named("Labrador"));
+        persist(aProduct().named("Bulldog"),
+                aProduct().named("Dalmatian"),
+                aProduct().named("Labrador"));
 
         List<Product> selection = Select.from(products, "p")
                                         .where("p.name = ?", "Labrador")
@@ -138,7 +157,6 @@ public class SelectionTest {
         assertThat("selection", selection, hasSize(1));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     queryingDataFromMultipleTables() {
@@ -156,7 +174,6 @@ public class SelectionTest {
         assertThat("selection", selection, everyItem(itemWithProductNumber("BULLDOG")));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void
     queryingDataFromMultipleTablesWithTableAliases() {
@@ -172,7 +189,7 @@ public class SelectionTest {
 
     @Test
     public void
-    queryingDataFromMultipleTablesWhenItMightOnlyExistInTheFirstTable() throws ParseException {
+    queryingDataFromMultipleTablesDataThatMightOnlyExistInTheFirstTable() {
         persist(
                 anOrder().withNumber("00000001"),
                 anOrder().withNumber("10000001"),
@@ -181,7 +198,7 @@ public class SelectionTest {
 
         List<Order> selection = Select.from(orders)
                                       .leftJoin(payments, "orders.payment_id = payments.id")
-                                      .where("orders.number like ?", "1000%")
+                                      .where("orders.number LIKE ?", "1000%")
                                       .list(connection);
         assertThat("selection", selection, hasSize(2));
         assertThat("selection", selection, everyItem(orderWithNumber(startsWith("1000"))));
@@ -189,13 +206,13 @@ public class SelectionTest {
 
     @Test
     public void
-    usingAliasesWithLeftJoins() throws ParseException {
+    usingAliasesWithLeftJoins() {
         persist(anOrder().withNumber("10000002")
                          .paidUsing(persist(aVisa().withNumber("4111111111111111").withExpiryDate("12/18"))));
 
         Order selection = assertFound(Select.from(orders, "o")
                                             .leftJoin(payments, "p", "o.payment_id = p.id")
-                                            .where("o.number like ?", "1000%")
+                                            .where("o.number LIKE ?", "1000%")
                                             .first(connection));
         assertThat("selection", selection, orderWithNumber(startsWith("1000")));
     }
@@ -215,7 +232,7 @@ public class SelectionTest {
 
         List<LineItem> selection = Select.from(lineItems)
                                          .where("order_id = ?", idOf(order).get())
-                                         .orderBy("order_line desc")
+                                         .orderBy("order_line DESC")
                                          .list(connection);
         assertThat("selection", selection, contains(
                 lineWithItemNumber("00000003"),

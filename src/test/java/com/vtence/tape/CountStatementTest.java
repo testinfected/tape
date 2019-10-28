@@ -10,14 +10,14 @@ public class CountStatementTest {
     @Test public void
     countsFromTargetTable() {
         CountStatement count = new CountStatement("table");
-        assertThat("sql", count.toSql(), equalTo("select count(*) from table"));
+        assertThat("sql", count.toSql(), equalTo("SELECT COUNT(*) FROM table"));
     }
 
     @Test public void
     supportsWhereConditions() {
         CountStatement count = new CountStatement("table");
-        count.where("a = ? and b = ?");
+        count.where("a = ? AND b = ?");
 
-        assertThat("sql", count.toSql(), equalTo("select count(*) from table where a = ? and b = ?"));
+        assertThat("sql", count.toSql(), equalTo("SELECT COUNT(*) FROM table WHERE a = ? AND b = ?"));
     }
 }

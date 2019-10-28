@@ -10,8 +10,8 @@ import static java.util.Arrays.asList;
 public class SelectStatement implements Statement {
 
     private final String table;
+    private final String alias;
     private final Map<String, List<String>> columns = new HashMap<>();
-    private final Map<String, String> aliases = new HashMap<>();
     private final List<String> joinTables = new ArrayList<>();
     private final StringBuilder joinClause = new StringBuilder();
     private final StringBuilder whereClause = new StringBuilder();
@@ -20,48 +20,47 @@ public class SelectStatement implements Statement {
 
     private final List<Object> parameters = new ArrayList<>();
 
-    public SelectStatement(String table, String... columns) {
+    public SelectStatement(String table, String as, String... columns) {
+        this(table, as, asList(columns));
+    }
+
+    public SelectStatement(String table, String as, List<String> columns) {
         this.table = table;
-        this.columns.put(table, asList(columns));
+        this.alias = as;
+        this.columns.put(as, columns);
     }
 
-    public SelectStatement(String table, List<String> columns) {
-        this.table = table;
-        this.columns.put(table, columns);
+    public void join(String joinType, String joinTable, String as, String joinCondition, String... columnsToSelect) {
+        join(joinType, joinTable, as, joinCondition, asList(columnsToSelect));
     }
 
-    public void aliasTableName(String tableName, String alias) {
-        aliases.put(tableName, alias);
-    }
-
-    public void join(String joinType, String joinTable, String joinCondition, String... columnsToSelect) {
-        join(joinType, joinTable, joinCondition, asList(columnsToSelect));
-    }
-
-    public void join(String joinType, String joinTable, String joinCondition, List<String> columnsToSelect) {
-        joinWith(joinTable, columnsToSelect);
-        appendJoinClause(joinTable, joinType, joinCondition);
+    public void join(String joinType, String joinTable, String as, String joinCondition, List<String> columnsToSelect) {
+        joinWith(as, columnsToSelect);
+        appendJoinClause(joinTable, as, joinType, joinCondition);
     }
 
     private void joinWith(String tableName, List<String> columnNames) {
         joinTables.add(tableName);
-        this.columns.put(tableName, columnNames);
+        columns.put(tableName, columnNames);
     }
 
-    private void appendJoinClause(String tableName, String joinType, String joinCondition) {
-        joinClause.append(" ").append(joinType).append(" join ").append(tableName);
-        if (aliased(tableName)) {
-            joinClause.append(" ").append(aliasOf(tableName));
-        }
-        joinClause.append(" on ").append(joinCondition);
+    private void appendJoinClause(String tableName, String as, String joinType, String joinCondition) {
+        joinClause.append(" ")
+                  .append(joinType)
+                  .append(" JOIN ")
+                  .append(tableName)
+                  .append(" AS ")
+                  .append(as)
+                  .append(" ON ")
+                  .append(joinCondition);
     }
 
     public void where(String clause) {
-        whereClause.append(" where ").append(clause);
+        whereClause.append(" WHERE ").append(clause);
     }
 
     public void orderBy(String clause) {
-        orderByClause.append(" order by ").append(clause);
+        orderByClause.append(" ORDER BY ").append(clause);
     }
 
     public void limit(int rowCount) {
@@ -69,7 +68,7 @@ public class SelectStatement implements Statement {
     }
 
     public void limit(int offset, int rowCount) {
-        limitClause.append(" limit ");
+        limitClause.append(" LIMIT ");
         if (offset != 0) limitClause.append(offset).append(", ");
         limitClause.append(rowCount);
     }
@@ -91,7 +90,7 @@ public class SelectStatement implements Statement {
 
     private String selectClause() {
         StringBuilder clause = new StringBuilder();
-        clause.append("select ");
+        clause.append("SELECT ");
         for (Iterator<String> it = listColumns().iterator(); it.hasNext(); ) {
             clause.append(it.next());
             if (it.hasNext()) clause.append(", ");
@@ -106,8 +105,7 @@ public class SelectStatement implements Statement {
     }
 
     private Collection<String> listColumns() {
-        Collection<String> columnNames = new ArrayList<>();
-        columnNames.addAll(qualifiedColumnNamesOf(table));
+        Collection<String> columnNames = new ArrayList<>(qualifiedColumnNamesOf(alias));
         for (String joinTable : joinTables) {
             columnNames.addAll(qualifiedColumnNamesOf(joinTable));
         }
@@ -117,7 +115,7 @@ public class SelectStatement implements Statement {
     private List<String> qualifiedColumnNamesOf(String tableName) {
         List<String> qualifiedColumnNames = new ArrayList<>();
         for (String column : columnsOf(tableName)) {
-            qualifiedColumnNames.add(aliased(tableName) ? aliasOf(tableName) + "." + column : column);
+            qualifiedColumnNames.add(tableName + "." + column);
         }
         return qualifiedColumnNames;
     }
@@ -126,20 +124,10 @@ public class SelectStatement implements Statement {
         return columns.get(tableName);
     }
 
-    private boolean aliased(String tableName) {
-        return aliases.containsKey(tableName);
-    }
-
-    private String aliasOf(String tableName) {
-        return aliases.get(tableName);
-    }
-
     private String fromClause() {
-        StringBuilder from = new StringBuilder(" from ");
+        StringBuilder from = new StringBuilder(" FROM ");
         from.append(table);
-        if (aliased(table)) {
-            from.append(" ").append(aliasOf(table));
-        }
+        from.append(" AS ").append(alias);
         return from.toString();
     }
 

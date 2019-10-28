@@ -39,7 +39,9 @@ public class UpdateTest {
     @Test public void
     updatingAnExistingRecord() {
         persist(aProduct().named("Dalmatian"));
-        final Product original = persist(aProduct().withNumber("12345678").named("English Bulldog").describedAs("A muscular heavy dog"));
+        final Product original = persist(aProduct().withNumber("12345678")
+                                                   .named("English Bulldog")
+                                                   .describedAs("A muscular heavy dog"));
 
         original.setName("Labrador Retriever");
         original.setDescription("A fun type of dog");
