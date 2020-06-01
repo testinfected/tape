@@ -91,6 +91,16 @@ public class Select<T> {
         return this;
     }
 
+    public Select<T> limit(int count) {
+        statement.limit(count);
+        return this;
+    }
+
+    public Select<T> offset(int skip) {
+        statement.offset(skip);
+        return this;
+    }
+
     public void distinct() {
         statement.distinct();
     }

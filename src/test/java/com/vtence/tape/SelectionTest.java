@@ -32,6 +32,7 @@ import static com.vtence.tape.testmodel.matchers.Items.itemWithProductNumber;
 import static com.vtence.tape.testmodel.matchers.Lines.lineWithItemNumber;
 import static com.vtence.tape.testmodel.matchers.Orders.orderWithNumber;
 import static com.vtence.tape.testmodel.matchers.Products.productNamed;
+import static com.vtence.tape.testmodel.matchers.Products.productWithNumber;
 import static com.vtence.tape.testmodel.matchers.Products.sameProductAs;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -310,6 +311,29 @@ public class SelectionTest {
                           .join(items, "items.product_id = products.id")
                           .count(connection);
         assertThat("distinct products", count, is(3));
+    }
+
+    @Test
+    public void
+    retrievingJustAPortionOfTheRecords() {
+        persist(
+                aProduct().withNumber("00000001"),
+                aProduct().withNumber("00000002"),
+                aProduct().withNumber("00000003"),
+                aProduct().withNumber("00000004"),
+                aProduct().withNumber("00000005")
+        );
+
+        List<Product> found = Select.from(products)
+                                    .limit(3)
+                                    .offset(1)
+                                    .list(connection);
+
+        assertThat("products", found, contains(
+                productWithNumber("00000002"),
+                productWithNumber("00000003"),
+                productWithNumber("00000004")
+        ));
     }
 
     private <T> T assertFound(Optional<T> record) {

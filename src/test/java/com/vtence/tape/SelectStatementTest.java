@@ -55,11 +55,11 @@ public class SelectStatementTest {
     }
 
     @Test public void
-    supportsOffsetInLimits() {
+    supportsOffsets() {
         SelectStatement select = new SelectStatement("table", "t", "a", "b", "c");
-        select.limit(3, 5);
+        select.offset(5);
 
-        assertThat("sql", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t LIMIT 3, 5"));
+        assertThat("sql", select.toSql(), equalTo("SELECT t.a, t.b, t.c FROM table AS t OFFSET 5"));
     }
 
     @Test public void

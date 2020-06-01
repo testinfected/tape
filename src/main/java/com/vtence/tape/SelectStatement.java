@@ -24,6 +24,7 @@ public class SelectStatement implements Statement {
     private final StringBuilder whereClause = new StringBuilder();
     private final StringBuilder orderByClause = new StringBuilder();
     private final StringBuilder limitClause = new StringBuilder();
+    private final StringBuilder offsetClause = new StringBuilder();
 
     private boolean distinct;
     private boolean count;
@@ -72,13 +73,11 @@ public class SelectStatement implements Statement {
     }
 
     public void limit(int rowCount) {
-        limit(0, rowCount);
+        limitClause.append(" LIMIT ").append(rowCount);
     }
 
-    public void limit(int offset, int rowCount) {
-        limitClause.append(" LIMIT ");
-        if (offset != 0) limitClause.append(offset).append(", ");
-        limitClause.append(rowCount);
+    public void offset(int offset) {
+        offsetClause.append(" OFFSET ").append(offset);
     }
 
     public void distinct() {
@@ -101,6 +100,7 @@ public class SelectStatement implements Statement {
         sql.append(whereClause);
         sql.append(orderByClause);
         sql.append(limitClause);
+        sql.append(offsetClause);
         return sql.toString();
     }
 
