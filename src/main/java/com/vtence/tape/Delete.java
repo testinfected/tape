@@ -37,4 +37,8 @@ public class Delete<T> {
     private int execute(PreparedStatement delete) throws SQLException {
         return delete.executeUpdate();
     }
+
+    public String toString() {
+        return statement.toSql();
+    }
 }

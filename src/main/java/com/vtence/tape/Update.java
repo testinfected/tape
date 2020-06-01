@@ -46,4 +46,8 @@ public class Update<T> {
     private int execute(PreparedStatement update) throws SQLException {
         return update.executeUpdate();
     }
+
+    public String toString() {
+        return statement.toSql();
+    }
 }

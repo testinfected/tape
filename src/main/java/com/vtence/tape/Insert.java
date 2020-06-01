@@ -45,4 +45,8 @@ public class Insert<T> {
     private T handleKeys(PreparedStatement insert) throws SQLException {
         return (T) into.handleKeys(insert.getGeneratedKeys(), entity);
     }
+
+    public String toString() {
+        return statement.toSql();
+    }
 }

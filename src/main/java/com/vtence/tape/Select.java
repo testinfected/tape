@@ -162,4 +162,8 @@ public class Select<T> {
     private ResultSet execute(PreparedStatement query) throws SQLException {
         return query.executeQuery();
     }
+
+    public String toString() {
+        return statement.toSql();
+    }
 }
