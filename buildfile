@@ -1,5 +1,7 @@
 require 'buildr/gpg'
 
+repositories.remote << "https://repo1.maven.org/maven2"
+
 VERSION_NUMBER = "3.1.0"
 
 Release.next_version = "3.1.0"
