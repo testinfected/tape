@@ -37,7 +37,8 @@ public class PaymentRecord extends AbstractRecord<PaymentMethod> {
     }
 
     public PaymentMethod hydrate(ResultSet rs) throws SQLException {
-        if (!paymentType.get(rs).equals(CREDIT_CARD)) throw new IllegalArgumentException("payment of type " + paymentType.get(rs));
+        if (!CREDIT_CARD.equals(paymentType.get(rs)))
+            throw new IllegalArgumentException("payment of type " + paymentType.get(rs));
 
         CreditCardDetails creditCard = new CreditCardDetails(
                 CreditCardType.valueOf(cardType.get(rs)), cardNumber.get(rs), cardExpiryDate.get(rs),

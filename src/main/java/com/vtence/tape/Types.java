@@ -14,7 +14,8 @@ public final class Types {
 
     public static final Column.Type<Long> LONG = new Column.Type<Long>() {
         public Long get(ResultSet rs, int index) throws SQLException {
-            return rs.getLong(index);
+            long value = rs.getLong(index);
+            return rs.wasNull() ? null : value;
         }
 
         public void set(PreparedStatement statement, int index, Long value) throws SQLException {
@@ -47,7 +48,8 @@ public final class Types {
 
     public static final Column.Type<Integer> INT = new Column.Type<Integer>() {
         public Integer get(ResultSet rs, int index) throws SQLException {
-            return rs.getInt(index);
+            int value = rs.getInt(index);
+            return rs.wasNull() ? null : value;
         }
 
         public void set(PreparedStatement statement, int index, Integer value) throws SQLException {
@@ -60,7 +62,8 @@ public final class Types {
 
     public static final Column.Type<Boolean> BOOLEAN = new Column.Type<Boolean>() {
         public Boolean get(ResultSet rs, int index) throws SQLException {
-            return rs.getBoolean(index);
+            boolean value = rs.getBoolean(index);
+            return rs.wasNull() ? null : value;
         }
 
         public void set(PreparedStatement statement, int index, Boolean value) throws SQLException {

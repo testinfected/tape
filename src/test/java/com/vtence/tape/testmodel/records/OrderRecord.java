@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Types;
 
 import static com.vtence.tape.JDBC.toJavaDate;
 import static com.vtence.tape.JDBC.toSQLDate;
@@ -49,7 +48,7 @@ public class OrderRecord extends AbstractRecord<Order> {
 
     public Order hydrate(ResultSet rs) throws SQLException {
         Order order = new Order(new OrderNumber(number.get(rs)));
-        if (payment.get(rs) != Types.NULL)
+        if (payment.get(rs) != null)
             order.paidUsing(payments.hydrate(rs));
         order.setShippingDate(toJavaDate(shippingDate.get(rs)));
         order.setShippingTime(toJavaDate(shippingTime.get(rs)));
