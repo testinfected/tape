@@ -107,6 +107,10 @@ public class SelectStatement implements Statement {
     private String selectClause() {
         StringBuilder clause = new StringBuilder();
         clause.append("SELECT ");
+        if (count && !distinct) {
+            clause.append("COUNT(1)");
+            return clause.toString();
+        }
         if (count) clause.append("COUNT(");
         if (distinct) clause.append("DISTINCT ");
         clause.append(columnsSelection());
