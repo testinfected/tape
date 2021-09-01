@@ -2,9 +2,9 @@ require 'buildr/gpg'
 
 repositories.remote << "https://repo1.maven.org/maven2"
 
-VERSION_NUMBER = "3.3.0"
+VERSION_NUMBER = "3.4.0-SNAPSHOT"
 
-Release.next_version = "3.3.0"
+Release.next_version = "3.4.0"
 Release.commit_message = lambda { |version| "Bump version number to #{version}" }
 Release.tag_name = lambda { |version| "v#{version}" }
 
