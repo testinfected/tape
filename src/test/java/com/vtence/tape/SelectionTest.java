@@ -269,6 +269,23 @@ public class SelectionTest {
 
     @Test
     public void
+    usingParametrizedOrderByExpression() {
+        persist(anOrder().withNumber("10000003"));
+        persist(anOrder().withNumber("20000002"));
+        persist(anOrder().withNumber("30000001"));
+
+        List<Order> selection = Select.from(orders)
+                                      .orderBy("substring(number, ?, ?)", 2, 8)
+                                      .list(connection);
+        assertThat("selection", selection, contains(
+                orderWithNumber("30000001"),
+                orderWithNumber("20000002"),
+                orderWithNumber("10000003")
+        ));
+    }
+
+    @Test
+    public void
     selectingOnlyDistinctRecords() {
         Product singleProduct = persist(aProduct().withNumber("00000001"));
         persist(anItem().withNumber("1").of(singleProduct));

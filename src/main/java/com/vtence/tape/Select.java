@@ -86,8 +86,9 @@ public class Select<T> {
         return this;
     }
 
-    public Select<T> orderBy(String expression) {
+    public Select<T> orderBy(String expression, Object... parameters) {
         statement.orderBy(expression);
+        statement.addParameters(parameters);
         return this;
     }
 

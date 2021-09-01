@@ -20,7 +20,7 @@ public class Update<T> {
         this.statement = new UpdateStatement(table.name(), table.columnNames(false));
     }
 
-    public Update where(String clause, Object... parameters) {
+    public Update<T> where(String clause, Object... parameters) {
         statement.where(clause);
         statement.addParameters(parameters);
         return this;
